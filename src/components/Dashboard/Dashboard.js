@@ -3,35 +3,59 @@ import "./Dashboard.css"
 import Table from '../Table/Table'
 import axios from "axios"
 import Loader from "../Loader/Loader"
+import MultiRangeSlider from "multi-range-slider-react";
 
 export default function Dashboard() {
     const [tableData, setTableData] = useState([])
     const [showTable, setShowTable] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [states, setStates] = useState(null)
+    const [cities, setCities] = useState(null)
+    const [carModal, setCarModal] = useState(null)
+    const [minMileageValue, set_minMileageValue] = useState(10000);
+    const [maxMileageValue, set_maxMileageValue] = useState(70000);
+    const [minPrice, setMinPrice] = useState(40);
+    const [maxPrice, setMaxPrice] = useState(70);
 
     const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Differences", "Source"];
-    const states = ["lahore", "mandi"]
 
     useEffect(() => {
         const fetchStates = async () => {
-            let stateOptions = document.getElementById("state-options");
             try {
-                // let res = await axios.get("");
-                // let states = res.data.states;
-
-                states.forEach(state => {
-                    let option = document.createElement("option");
-                    option.text = state
-                    option.value = state
-
-                    stateOptions.appendChild(option)
-                });
-
+                let res = await axios.get("");
+                let data = res.data;
+                setStates(data.states)
             } catch (err) {
                 console.error(err)
             }
         }
         fetchStates()
+    }, [])
+
+    useEffect(() => {
+        const fetchCities = async () => {
+            try {
+                let res = await axios.get("");
+                let data = res.data;
+                setCities(data.cities)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchCities()
+    }, [])
+
+    useEffect(() => {
+        const fetchCarModels = async () => {
+            try {
+                let res = await axios.get("");
+                let data = res.data;
+                setCarModal(data.models)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchCarModels()
     }, [])
 
     const searchHandler = async () => {
@@ -45,6 +69,15 @@ export default function Dashboard() {
             console.error(error)
         }
         setLoading(false)
+    }
+
+    const handleMileageInput = (e) => {
+        set_minMileageValue(e.minValue)
+        set_maxMileageValue(e.maxValue)
+    }
+    const handlePriceInput = (e) => {
+        setMinPrice(e.minValue)
+        setMaxPrice(e.maxValue)
     }
 
     return (
@@ -76,26 +109,71 @@ export default function Dashboard() {
                     <div className='dashboard-select-criteria'>
                         <div className='dashboard-select-heading'>Select State</div>
                         <select id='state-options'>
-                            <option>hi</option>
+                            <option value="" >--Choose an option--</option>
+                            {states?.map((item) => {
+                                return (<option value={item}>{item}</option>)
+                            })}
                         </select>
                     </div>
                     <div className='dashboard-select-criteria'>
                         <div className='dashboard-select-heading'>Select City</div>
-                        <select>
-                        <option>hi</option>
+                        <select id='state-options'>
+                            <option value="" >--Choose an option--</option>
+                            {cities?.map((item) => {
+                                return (<option value={item}>{item}</option>)
+                            })}
                         </select>
                     </div>
                     <div className='dashboard-select-criteria'>
                         <div className='dashboard-select-heading'>Car Model</div>
-                        <select></select>
+                        <select id='state-options'>
+                            <option value="" >--Choose an option--</option>
+                            {carModal?.map((item) => {
+                                return (<option value={item}>{item}</option>)
+                            })}
+                        </select>
                     </div>
                     <div className='dashboard-select-criteria'>
-                        <div className='dashboard-select-heading'>Mileage</div>
-                        <select></select>
+                        <div className='dashboard-select-heading'>Mileage Range</div>
+                        <div className="range-slider">
+                            <MultiRangeSlider
+                                min={0}
+                                max={100000}
+                                minValue={minMileageValue}
+                                maxValue={maxMileageValue}
+                                ruler={false}
+                                barLeftColor="white"
+                                barRightColor="white"
+                                label={false}
+                                barInnerColor="#1B5886"
+                                thumbLeftColor="#1B5886"
+                                thumbRightColor="#1B5886"
+                                onInput={(e) => {
+                                    handleMileageInput(e);
+                                }}
+                            />
+                        </div>
                     </div>
                     <div className='dashboard-select-criteria'>
-                        <div className='dashboard-select-heading'>Price</div>
-                        <select></select>
+                        <div className='dashboard-select-heading'>Price Differences Percentage</div>
+                        <div className="range-slider">
+                            <MultiRangeSlider
+                                min={0}
+                                max={100}
+                                minValue={minPrice}
+                                maxValue={maxPrice}
+                                ruler={false}
+                                barLeftColor="white"
+                                barRightColor="white"
+                                label={false}
+                                barInnerColor="#1B5886"
+                                thumbLeftColor="#1B5886"
+                                thumbRightColor="#1B5886"
+                                onInput={(e) => {
+                                    handlePriceInput(e);
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
 
