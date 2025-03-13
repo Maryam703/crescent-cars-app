@@ -1,0 +1,127 @@
+.signup-login-container{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #003A6B;
+}
+.signup-login-container>div{
+    height: 80%;
+    width: 32%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(197, 195, 195);
+    border-radius: 10px;
+    background-color: white;
+}
+.signup-login-container>div>input{
+    height: 3%;
+    width: 80%;
+    outline: none;
+    border: 1px solid rgb(204, 201, 201);
+    border-radius: 4px;
+    margin: 2%;
+    padding: 1%;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.signup-login-container>div>button{
+    color: white;
+    background-color: #1B5886;
+    height: 3%;
+    width: 82%;
+    padding: 3%;
+    margin-top: 4%;
+    font-size: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #1B5886;
+}
+.signup-login-container>div>button:hover{
+    background-color: white;
+    color: #1B5886;
+    font-size: 17px;
+    font-weight: 500;
+}
+#file-input{
+    display: none;
+}
+.signup-login-profle-image{
+    height: 180px;
+    width: 260px;
+    border: none;
+    background-image: url('https://media.licdn.com/dms/image/v2/D4E22AQErU4Koo1pj2Q/feedshare-shrink_800/B4EZVH55dUHcAg-/0/1740668115468?e=2147483647&v=beta&t=QS41O87R82t8GAbbagErN4qW7fyO4wTT0BR8Q2u8uU4');
+    background-size: cover;
+    cursor : pointer
+}
+.signup-login-name-logo{
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 1%;
+    margin-bottom: 6%;
+}
+.signup-login-redirect-para{
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 4%;
+    margin-bottom: 2%;
+}
+@media screen and (max-width : 1250px) {
+    .signup-login-container>div{
+        width: 33%;
+    }
+}
+@media screen and (max-width : 1150px) {
+    .signup-login-container>div{
+        width: 36%;
+    }
+}
+@media screen and (max-width : 1050px) {
+    .signup-login-container>div{
+        width: 40%;
+    }
+}
+@media screen and (max-width : 950px) {
+    .signup-login-container>div{
+        width: 45%;
+    }
+}
+@media screen and (max-width : 850px) {
+    .signup-login-container>div{
+        width: 50%;
+    }
+}
+@media screen and (max-width : 750px) {
+    .signup-login-container>div{
+        width: 58%;
+    }
+}
+@media screen and (max-width : 650px) {
+    .signup-login-container>div{
+        width: 65%;
+    }
+}
+@media screen and (max-width : 550px) {
+    .signup-login-container>div{
+        width: 72%;
+    }
+}
+@media screen and (max-width : 450px) {
+    .signup-login-container>div{
+        width: 80%;
+    }
+}
+@media screen and (max-width < 400px) {
+    .signup-login-container>div{
+        width: 90%;
+    }
+}
