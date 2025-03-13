@@ -4,7 +4,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #1B5886;
     background-color: white;
 }
 
@@ -15,7 +14,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #1B5886;
     background-color: white;
 }
 
@@ -24,6 +22,7 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    color: black;
 }
 
 .dashboard-upper-box-1{
@@ -52,7 +51,7 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    font-size: 16px;
+    font-size: 18px;
     font-family: 'Times New Roman', Times, serif;
     margin-bottom: 4%;
 }
@@ -87,6 +86,12 @@
     margin-bottom: 0.5%;
 }
 
+select, select > option {
+    width: 100%;
+    padding: 1%;
+    border-radius: 4px;
+}
+
 .dashboard-search-btn {
     width: 26%;
     height: 36px;
@@ -105,6 +110,7 @@
 }
 
 .dashboard-search-btn:hover {
+    font-weight: 600;
     background-color: white;
     color: #1B5886;
     border: 1px solid #1B5886;
