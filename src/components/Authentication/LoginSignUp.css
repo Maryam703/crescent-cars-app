@@ -77,27 +77,27 @@ input::-webkit-inner-spin-button {
 }
 @media screen and (max-width : 1250px) {
     .signup-login-container>div{
-        width: 33%;
+        width: 34%;
     }
 }
 @media screen and (max-width : 1150px) {
     .signup-login-container>div{
-        width: 36%;
+        width: 38%;
     }
 }
 @media screen and (max-width : 1050px) {
     .signup-login-container>div{
-        width: 40%;
+        width: 42%;
     }
 }
 @media screen and (max-width : 950px) {
     .signup-login-container>div{
-        width: 45%;
+        width: 48%;
     }
 }
 @media screen and (max-width : 850px) {
     .signup-login-container>div{
-        width: 50%;
+        width: 52%;
     }
 }
 @media screen and (max-width : 750px) {
@@ -112,16 +112,16 @@ input::-webkit-inner-spin-button {
 }
 @media screen and (max-width : 550px) {
     .signup-login-container>div{
-        width: 72%;
+        width: 78%;
     }
 }
 @media screen and (max-width : 450px) {
     .signup-login-container>div{
-        width: 80%;
+        width: 85%;
     }
 }
 @media screen and (max-width < 400px) {
     .signup-login-container>div{
-        width: 90%;
+        width: 98%;
     }
 }
