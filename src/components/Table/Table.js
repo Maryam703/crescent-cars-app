@@ -1,11 +1,12 @@
 import React from "react";
 import "./Table.css";
+import { Link } from "react-router-dom"
 
 export default function Table({
-    TableHeadings, 
-    TableData
+  TableHeadings,
+  TableData,
+  percentageDiff
 }) {
-  console.log(TableData)
 
   return (
     <div>
@@ -26,8 +27,12 @@ export default function Table({
                 <td>{item.mileage}</td>
                 <td>${item.listingPrice}</td>
                 <td>${item.marrketValue}</td>
-                <td>{item.difference}</td>
+                {percentageDiff(item.marrketValue, item.listingPrice) >= 20 ?
+                  <td>{percentageDiff(item.marrketValue, item.listingPrice)}% ✅</td>
+                  :
+                  <td>{percentageDiff(item.marrketValue, item.listingPrice)}%</td>}
                 <td>{item.source}</td>
+                <td><Link to={item.link}>visit🔗</Link></td>
               </tr>
             );
           })}

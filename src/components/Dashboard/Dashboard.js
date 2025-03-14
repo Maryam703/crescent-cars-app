@@ -6,111 +6,142 @@ import Loader from "../Loader/Loader"
 import MultiRangeSlider from "multi-range-slider-react";
 
 export default function Dashboard() {
-  //  const [tableData, setTableData] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [states, setStates] = useState(null)
-    const [minMileageValue, set_minMileageValue] = useState(10000);
-    const [maxMileageValue, set_maxMileageValue] = useState(70000);
-    const [minPrice, setMinPrice] = useState(40);
-    const [maxPrice, setMaxPrice] = useState(70);
-    const [cities, setCities] = useState(null);
-    const [carModal, setCarModal] = useState(null);
-   // const [data, setData] = useState(null);
-
-    const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Differences", "Source"];
-    const tableData = [
+    const [apiData, setApiData] = useState([
         {
-        title : "Honda Car",
-        year : 2014,
-        making : "Toyota",
-        model: "Model 3",
-        mileage : 5.877,
-        listingPrice : 301.50,
-        marrketValue : 346.988,
-        difference : "-10.5%",
-        source : "Craigslist"
-    },
-    {
-        title : "Honda Car",
-        year : 2014,
-        making : "Toyota",
-        model: "Model 3",
-        mileage : 5.877,
-        listingPrice : 301.50,
-        marrketValue : 346.988,
-        difference : "-10.5%",
-        source : "Craigslist"
-    },
-    {
-        title : "Honda Car",
-        year : 2014,
-        making : "Toyota",
-        model: "Model 3",
-        mileage : 5.877,
-        listingPrice : 301.50,
-        marrketValue : 346.988,
-        difference : "-10.5%",
-        source : "Craigslist"
-    },
-    {
-        title : "Honda Car",
-        year : 2014,
-        making : "Toyota",
-        model: "Model 3",
-        mileage : 5.877,
-        listingPrice : 301.50,
-        marrketValue : 346.988,
-        difference : "-10.5%",
-        source : "Craigslist"
-    },
-    {
-        title : "Honda Car",
-        year : 2014,
-        making : "Toyota",
-        model: "Model 3",
-        mileage : 5.877,
-        listingPrice : 301.50,
-        marrketValue : 346.988,
-        difference : "-10.5%",
-        source : "Craigslist"
-    }
-]
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             let res = await axios.get("https://kinwdpewewrluwhjwgdk.supabase.co/rest/v1/jdpowercars");
-    //             data = res.data
-    //             setData(data)
-    //         } catch (err) {
-    //             console.error(err)
-    //         }
-    //     }
-    //     fetchData()
-    // }, [])
-    // console.log(data)
-
-    const searchHandler = async () => {
-        setLoading(true)
-       // setShowTable(true)
-        try {
-            let res = await axios.get("/")
-            let data = res.data
-           // setTableData(data)
-        } catch (error) {
-            console.error(error)
+            title: "Honda Car",
+            id: "1",
+            city: "lahore",
+            state: "lahore",
+            year: 2014,
+            making: "Toyota",
+            model: "Model 3",
+            mileage: 8.877,
+            listingPrice: 70,
+            marrketValue: 100,
+            source: "Craigslist",
+            link: "http//:qwertyuiopasdfbhnjm"
+        },
+        {
+            title: "Honda Car",
+            id: "1",
+            city: "Los angles",
+            state: "California",
+            year: 2014,
+            making: "Toyota",
+            model: "Model 3",
+            mileage: 5.877,
+            listingPrice: 301.50,
+            marrketValue: 346.988,
+            source: "Craigslist",
+            link: "http//:qwertyuiopasdfbhnjm"
+        },
+        {
+            title: "Honda Car",
+            id: "1",
+            city: "Los angles",
+            state: "California",
+            year: 2014,
+            making: "Toyota",
+            model: "Model 3",
+            mileage: 5.877,
+            listingPrice: 301.50,
+            marrketValue: 346.988,
+            source: "Craigslist",
+            link: "http//:qwertyuiopasdfbhnjm"
+        },
+        {
+            title: "Honda Car",
+            id: "1",
+            city: "Los angles",
+            state: "California",
+            year: 2014,
+            making: "Toyota",
+            model: "Model 3",
+            mileage: 5.877,
+            listingPrice: 301.50,
+            marrketValue: 346.988,
+            source: "Craigslist",
+            link: "http//:qwertyuiopasdfbhnjm"
+        },
+        {
+            title: "Honda Car",
+            id: "1",
+            city: "Los angles",
+            state: "California",
+            year: 2014,
+            making: "Toyota",
+            model: "Model 3",
+            mileage: 5.877,
+            listingPrice: 301.50,
+            marrketValue: 346.988,
+            source: "Craigslist",
+            link: "http//:qwertyuiopasdfbhnjm"
         }
-        setLoading(false)
-    }
+    ])
+    const [loading, setLoading] = useState(false)
+    const [state, setState] = useState(null)
+    const [minMileageValue, set_minMileageValue] = useState(10);
+    const [maxMileageValue, set_maxMileageValue] = useState(140);
+    const [minProfit, setMinProfit] = useState(40);
+    const [maxProfit, setMaxProfit] = useState(70);
+    const [minYear, setMinYear] = useState(2000);
+    const [maxYear, setMaxYear] = useState(2010);
+    const [city, setCity] = useState(null);
+    const [tableData, setTableData] = useState([]);
+
+    const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Differences", "Source", "Link"];
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                //let res = await axios.get("https://kinwdpewewrluwhjwgdk.supabase.co/rest/v1/jdpowercars");
+                //data = res.data
+                setApiData(apiData)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchData()
+    }, [])
 
     const handleMileageInput = (e) => {
         set_minMileageValue(e.minValue)
         set_maxMileageValue(e.maxValue)
     }
     const handlePriceInput = (e) => {
-        setMinPrice(e.minValue)
-        setMaxPrice(e.maxValue)
+        setMinProfit(e.minValue)
+        setMaxProfit(e.maxValue)
     }
+    const handleModelYearInput = (e) => {
+        setMinYear(e.minValue)
+        setMaxYear(e.maxValue)
+    }
+
+    const percentageDiff = (marketValue, listingPrice) => {
+        let profit = marketValue - listingPrice
+        let profitPercentage = ((profit / marketValue) * 100).toFixed(2)
+        return profitPercentage
+    }
+
+    const searchHandler = async () => {
+        setLoading(true)
+        const filteredData = apiData.filter((item) => {
+            let profitPercentage = percentageDiff(item.marrketValue, item.listingPrice)
+
+            return (
+                item.state === state
+                && item.city === city
+                && item.year >= minYear
+                && item.year <= maxYear
+                && item.mileage >= minMileageValue
+                && item.mileage <= maxMileageValue
+                && profitPercentage >= minProfit
+                && profitPercentage <= maxProfit)
+        })
+        setTableData(filteredData)
+        setLoading(false)
+    }
+    console.log(tableData)
 
     return (
         <div className='dashboard-container'>
@@ -140,37 +171,51 @@ export default function Dashboard() {
                 <div className='dashboard-select-container'>
                     <div className='dashboard-select-criteria'>
                         <div className='dashboard-select-heading'>Select State</div>
-                        <select id='state-options'>
+                        <select id='state-options'
+                            onChange={(e) => setState(e.target.value)}>
                             <option value="" >--Choose an option--</option>
-                            {states?.map((item) => {
-                                return (<option value={item}>{item}</option>)
+                            {apiData && apiData?.map((item) => {
+                                return (<option value={item.state}>{item.state}</option>)
                             })}
                         </select>
                     </div>
                     <div className='dashboard-select-criteria'>
                         <div className='dashboard-select-heading'>Select City</div>
-                        <select id='state-options'>
+                        <select id='state-options'
+                            onChange={(e) => setCity(e.target.value)}>
                             <option value="" >--Choose an option--</option>
-                            {cities?.map((item) => {
-                                return (<option value={item}>{item}</option>)
+                            {apiData && apiData?.map((item) => {
+                                return (<option value={item.city}>{item.city}</option>)
                             })}
                         </select>
                     </div>
                     <div className='dashboard-select-criteria'>
-                        <div className='dashboard-select-heading'>Car Model</div>
-                        <select id='state-options'>
-                            <option value="" >--Choose an option--</option>
-                            {carModal?.map((item) => {
-                                return (<option value={item}>{item}</option>)
-                            })}
-                        </select>
+                        <div className='dashboard-select-heading'>Car Model Range</div>
+                        <div className="range-slider">
+                            <MultiRangeSlider
+                                min={1950}
+                                max={2025}
+                                minValue={minYear}
+                                maxValue={maxYear}
+                                ruler={false}
+                                barLeftColor="white"
+                                barRightColor="white"
+                                label={false}
+                                barInnerColor="#1B5886"
+                                thumbLeftColor="#1B5886"
+                                thumbRightColor="#1B5886"
+                                onInput={(e) => {
+                                    handleModelYearInput(e);
+                                }}
+                            />
+                        </div>
                     </div>
                     <div className='dashboard-select-criteria'>
                         <div className='dashboard-select-heading'>Mileage Range</div>
                         <div className="range-slider">
                             <MultiRangeSlider
                                 min={0}
-                                max={100000}
+                                max={200.000}
                                 minValue={minMileageValue}
                                 maxValue={maxMileageValue}
                                 ruler={false}
@@ -192,8 +237,8 @@ export default function Dashboard() {
                             <MultiRangeSlider
                                 min={0}
                                 max={100}
-                                minValue={minPrice}
-                                maxValue={maxPrice}
+                                minValue={minProfit}
+                                maxValue={maxProfit}
                                 ruler={false}
                                 barLeftColor="white"
                                 barRightColor="white"
@@ -208,13 +253,13 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
-                    <div className='dashboard-search-btn' onClick={searchHandler}>Search here</div>
+                <div className='dashboard-search-btn' onClick={searchHandler}>Search here</div>
 
 
                 <div className='dashboard-data-table-container'>
                     <div className="dashboard-data-table-inner-container">
-                   <Table TableHeadings={tableHeadings} TableData={tableData} />
-                   </div>
+                        <Table TableHeadings={tableHeadings} TableData={tableData} percentageDiff={percentageDiff} />
+                    </div>
                 </div>
 
             </div>
