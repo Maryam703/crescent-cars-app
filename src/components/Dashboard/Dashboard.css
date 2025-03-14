@@ -3,9 +3,11 @@
     height: auto;
     width: 100%;
     display: flex;
+    color: black;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-size: cover;
+    background-image: url('https://autovista24.autovistagroup.com/wp-content/uploads/sites/5/2024/01/ces-concept-cars-17-1-24-e1705515127368.jpg');
 }
 
 .dashboard-inner-container {
@@ -15,7 +17,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: white;
+    margin-top: 10px;
 }
 
 .dashboard-upper-box {
@@ -23,23 +25,27 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    color: black;
 }
 
 .dashboard-upper-box-1 {
-    width: 18%;
-    height: 160px;
-    margin-right: 2%;
+    width: 15.2%;
+    height: 200px;
+    margin-top: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .dashboard-upper-box-1>img {
-    width: 100%;
-    height: 100%;
+    width: 236px;
+    height: 210px;
     object-fit: cover;
+    border-radius: 50%;
 }
 
 .dashboard-upper-box-2 {
     width: 80%;
+    margin-left: 4%;
 }
 
 .dashboard-heading {
@@ -59,27 +65,36 @@
     margin-bottom: 4%;
 }
 
+
 .dashboard-select-container {
-    width: 80%;
+    width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    color: #1B5886;
-    background-color: white;
+    justify-content: center;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.521);
+    border-radius: 18px;
+    padding: 10px;
 }
 
 .dashboard-select-criteria {
-    width: 28%;
+    width: 30%;
     height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #1B5886;
-    color: white;
-    padding: 0.5%;
-    margin: 1%;
-    border-radius: 4px;
+    background-color:white;
+    color: black;
+    margin: .5%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 1%;
+    border-radius: 18px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 1;
 }
 
 .dashboard-select-heading {
@@ -98,32 +113,48 @@ select>option {
 }
 
 .dashboard-search-btn {
-    width: 28%;
+    width: 30%;
     height: 36px;
     font-size: 22px;
-    font-weight: 500;
+    font-weight: 600;
     font-family: 'Times New Roman', Times, serif;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #1B5886;
+    cursor: pointer;
+    border: 1px solid #134063;
     color: white;
-    background-color: #1B5886;
+    background-color: #134063;
     margin-top: 1%;
-    padding: 0.5%;
+    padding: 1%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 1;
 }
 
 .dashboard-search-btn:hover {
     font-weight: 600;
     background-color: white;
     color: #1B5886;
-    border: 1px solid #1B5886;
+    border: 1px solid #134063;
 }
 
 .dashboard-data-table-container {
     width: 100%;
     height: auto;
+    background-color: white;
+    color: black;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.dashboard-data-table-inner-container{
+    width: auto;
+    height: auto;
+    overflow-x: auto;
 }
 
 .table-data-not-found {
@@ -144,7 +175,7 @@ select>option {
 
     .dashboard-upper-box-1 {
         width: 22%;
-        margin-right: 2%;
+
     }
 
     .dashboard-upper-box-2 {
@@ -203,7 +234,7 @@ select>option {
     .dashboard-upper-box {
         display: flex;
         flex-direction: column;
-        margin-top: 10vh;
+        margin-top: 7vh;
     }
 
     .dashboard-upper-box-1,
@@ -214,11 +245,6 @@ select>option {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-    }
-
-    .dashboard-upper-box-1>img {
-        width: 250px;
-        height: 180px;
     }
 
     .dashboard-select-criteria {

@@ -6,65 +6,97 @@ import Loader from "../Loader/Loader"
 import MultiRangeSlider from "multi-range-slider-react";
 
 export default function Dashboard() {
-    const [tableData, setTableData] = useState([])
-    const [showTable, setShowTable] = useState(false)
+  //  const [tableData, setTableData] = useState([])
     const [loading, setLoading] = useState(false)
     const [states, setStates] = useState(null)
-    const [cities, setCities] = useState(null)
-    const [carModal, setCarModal] = useState(null)
     const [minMileageValue, set_minMileageValue] = useState(10000);
     const [maxMileageValue, set_maxMileageValue] = useState(70000);
     const [minPrice, setMinPrice] = useState(40);
     const [maxPrice, setMaxPrice] = useState(70);
+    const [cities, setCities] = useState(null);
+    const [carModal, setCarModal] = useState(null);
+   // const [data, setData] = useState(null);
 
     const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Differences", "Source"];
+    const tableData = [
+        {
+        title : "Honda Car",
+        year : 2014,
+        making : "Toyota",
+        model: "Model 3",
+        mileage : 5.877,
+        listingPrice : 301.50,
+        marrketValue : 346.988,
+        difference : "-10.5%",
+        source : "Craigslist"
+    },
+    {
+        title : "Honda Car",
+        year : 2014,
+        making : "Toyota",
+        model: "Model 3",
+        mileage : 5.877,
+        listingPrice : 301.50,
+        marrketValue : 346.988,
+        difference : "-10.5%",
+        source : "Craigslist"
+    },
+    {
+        title : "Honda Car",
+        year : 2014,
+        making : "Toyota",
+        model: "Model 3",
+        mileage : 5.877,
+        listingPrice : 301.50,
+        marrketValue : 346.988,
+        difference : "-10.5%",
+        source : "Craigslist"
+    },
+    {
+        title : "Honda Car",
+        year : 2014,
+        making : "Toyota",
+        model: "Model 3",
+        mileage : 5.877,
+        listingPrice : 301.50,
+        marrketValue : 346.988,
+        difference : "-10.5%",
+        source : "Craigslist"
+    },
+    {
+        title : "Honda Car",
+        year : 2014,
+        making : "Toyota",
+        model: "Model 3",
+        mileage : 5.877,
+        listingPrice : 301.50,
+        marrketValue : 346.988,
+        difference : "-10.5%",
+        source : "Craigslist"
+    }
+]
 
-    useEffect(() => {
-        const fetchStates = async () => {
-            try {
-                let res = await axios.get("");
-                let data = res.data;
-                setStates(data.states)
-            } catch (err) {
-                console.error(err)
-            }
-        }
-        fetchStates()
-    }, [])
-
-    useEffect(() => {
-        const fetchCities = async () => {
-            try {
-                let res = await axios.get("");
-                let data = res.data;
-                setCities(data.cities)
-            } catch (err) {
-                console.error(err)
-            }
-        }
-        fetchCities()
-    }, [])
-
-    useEffect(() => {
-        const fetchCarModels = async () => {
-            try {
-                let res = await axios.get("");
-                let data = res.data;
-                setCarModal(data.models)
-            } catch (err) {
-                console.error(err)
-            }
-        }
-        fetchCarModels()
-    }, [])
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             let res = await axios.get("https://kinwdpewewrluwhjwgdk.supabase.co/rest/v1/jdpowercars");
+    //             data = res.data
+    //             setData(data)
+    //         } catch (err) {
+    //             console.error(err)
+    //         }
+    //     }
+    //     fetchData()
+    // }, [])
+    // console.log(data)
 
     const searchHandler = async () => {
         setLoading(true)
-        setShowTable(true)
+       // setShowTable(true)
         try {
             let res = await axios.get("/")
             let data = res.data
-            setTableData(data)
+           // setTableData(data)
         } catch (error) {
             console.error(error)
         }
@@ -176,15 +208,14 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
+                    <div className='dashboard-search-btn' onClick={searchHandler}>Search here</div>
 
 
-                <div className='dashboard-select-container'><div className='dashboard-search-btn' onClick={searchHandler}>Search</div></div>
-
-                {showTable && <div className='dashboard-data-table-container'>
-                    {tableData.length > 0 ? <Table TableHeadings={tableHeadings} TableData={tableData} />
-                        :
-                        <div className='table-data-not-found'>Data Not Found!</div>}
-                </div>}
+                <div className='dashboard-data-table-container'>
+                    <div className="dashboard-data-table-inner-container">
+                   <Table TableHeadings={tableHeadings} TableData={tableData} />
+                   </div>
+                </div>
 
             </div>
         </div>

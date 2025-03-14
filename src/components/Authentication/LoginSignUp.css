@@ -4,7 +4,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color:  #1B5886;
+    background-image: url('https://autovista24.autovistagroup.com/wp-content/uploads/sites/5/2024/01/ces-concept-cars-17-1-24-e1705515127368.jpg');
+    background-size: cover;
 }
 .signup-login-container>div{
     height: 80%;
@@ -15,7 +16,7 @@
     justify-content: center;
     border: 1px solid rgb(197, 195, 195);
     border-radius: 10px;
-    background-color: white;
+    background-color:white;
 }
 .signup-login-container>div>input{
     height: 3%;

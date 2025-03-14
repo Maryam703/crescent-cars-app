@@ -5,6 +5,7 @@ import App from './App';
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import SignUp from './components/Authentication/SignUp';
 import Dashboard from './components/Dashboard/Dashboard';
+import Table from './components/Table/Table';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -12,6 +13,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path='/data-table/:data' element={<Table/> } />
     </>
   )
 )

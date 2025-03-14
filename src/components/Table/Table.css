@@ -1,11 +1,6 @@
-Link{
-    text-decoration: none;
-    width: 100%;
-}
 table {
     width: 100%;
     text-align: left;
-    padding: 10px;
     margin-top: 30px;
     margin-left: 30px;
     cursor: pointer;
@@ -23,8 +18,10 @@ th{
     font-family: 'Times New Roman', Times, serif;
 }
 td{
-    height: 35px;
+    height: 28px;
     font-size: 18px;
+    font-weight: 400;
     text-align: left;
     padding: 10px;
+    font-family: 'Times New Roman', Times, serif;
 }
