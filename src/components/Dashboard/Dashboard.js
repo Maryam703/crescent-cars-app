@@ -1,88 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import "./Dashboard.css"
 import Table from '../Table/Table'
-import axios from "axios"
 import Loader from "../Loader/Loader"
 import MultiRangeSlider from "multi-range-slider-react";
+import { createClient } from '@supabase/supabase-js';
 
 export default function Dashboard() {
-    const [apiData, setApiData] = useState([
-        {
-            title: "Honda Car",
-            id: "1",
-            city: "lahore",
-            state: "lahore",
-            year: 2014,
-            making: "Toyota",
-            model: "Model 3",
-            mileage: 8.877,
-            listingPrice: 70,
-            marrketValue: 100,
-            source: "Craigslist",
-            link: "http//:qwertyuiopasdfbhnjm"
-        },
-        {
-            title: "Honda Car",
-            id: "1",
-            city: "Los angles",
-            state: "California",
-            year: 2014,
-            making: "Toyota",
-            model: "Model 3",
-            mileage: 5.877,
-            listingPrice: 301.50,
-            marrketValue: 346.988,
-            source: "Craigslist",
-            link: "http//:qwertyuiopasdfbhnjm"
-        },
-        {
-            title: "Honda Car",
-            id: "1",
-            city: "Los angles",
-            state: "California",
-            year: 2014,
-            making: "Toyota",
-            model: "Model 3",
-            mileage: 5.877,
-            listingPrice: 301.50,
-            marrketValue: 346.988,
-            source: "Craigslist",
-            link: "http//:qwertyuiopasdfbhnjm"
-        },
-        {
-            title: "Honda Car",
-            id: "1",
-            city: "Los angles",
-            state: "California",
-            year: 2014,
-            making: "Toyota",
-            model: "Model 3",
-            mileage: 5.877,
-            listingPrice: 301.50,
-            marrketValue: 346.988,
-            source: "Craigslist",
-            link: "http//:qwertyuiopasdfbhnjm"
-        },
-        {
-            title: "Honda Car",
-            id: "1",
-            city: "Los angles",
-            state: "California",
-            year: 2014,
-            making: "Toyota",
-            model: "Model 3",
-            mileage: 5.877,
-            listingPrice: 301.50,
-            marrketValue: 346.988,
-            source: "Craigslist",
-            link: "http//:qwertyuiopasdfbhnjm"
-        }
-    ])
+    const [apiData, setApiData] = useState([])
     const [loading, setLoading] = useState(false)
     const [state, setState] = useState(null)
-    const [minMileageValue, set_minMileageValue] = useState(10);
-    const [maxMileageValue, set_maxMileageValue] = useState(140);
-    const [minProfit, setMinProfit] = useState(40);
+    const [minMileageValue, set_minMileageValue] = useState(100);
+    const [maxMileageValue, set_maxMileageValue] = useState(100000);
+    const [minProfit, setMinProfit] = useState(0);
     const [maxProfit, setMaxProfit] = useState(70);
     const [minYear, setMinYear] = useState(2000);
     const [maxYear, setMaxYear] = useState(2010);
@@ -91,18 +20,34 @@ export default function Dashboard() {
 
     const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Differences", "Source", "Link"];
 
+    const supabaseApi = 'https://kinwdpewewrluwhjwgdk.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpbndkcGV3ZXdybHV3aGp3Z2RrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMTc4MTIsImV4cCI6MjA1NjU5MzgxMn0.X1p6xlE7XmPJaUI4SugucfmhmmNTCp_e_pu_Dq7-M7Q';
+    const tableName = 'cars_data';
+    const supabase = createClient(supabaseApi, supabaseKey);
+
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                //let res = await axios.get("https://kinwdpewewrluwhjwgdk.supabase.co/rest/v1/jdpowercars");
-                //data = res.data
-                setApiData(apiData)
-            } catch (err) {
-                console.error(err)
+            const { data, error } = await supabase
+                .from(tableName)
+                .select('*');
+
+            if (error) {
+                console.error(error);
+            } else {
+                setApiData(data);
             }
-        }
-        fetchData()
-    }, [])
+        };
+
+        fetchData();
+    }, [tableName]);
+    //min and max value of mileage
+    const mileageVal = apiData.map((item) => item.mileage)
+    const minMileageFromApiData = Math.min(...mileageVal)
+    const maxMileageFromApiData = Math.max(...mileageVal)
+    //min and max value of car model in year
+    const carModalYearVal = apiData.map((item) => item.year)
+    const minCarModalYearVal = Math.min(...carModalYearVal)
+    const maxCarModalYearVal = Math.max(...carModalYearVal)
 
     const handleMileageInput = (e) => {
         set_minMileageValue(e.minValue)
@@ -123,10 +68,19 @@ export default function Dashboard() {
         return profitPercentage
     }
 
-    const searchHandler = async () => {
+    const searchHandler = () => {
         setLoading(true)
+        console.log(apiData)
         const filteredData = apiData.filter((item) => {
-            let profitPercentage = percentageDiff(item.marrketValue, item.listingPrice)
+            let profitPercentage = percentageDiff(item.marrketValue, item.price);
+            console.log(state)
+            console.log(city)
+            console.log(minMileageValue)
+            console.log(maxMileageValue)
+            console.log(minYear)
+            console.log(maxYear)
+            // console.log(minProfit)
+            // console.log(maxProfit)
 
             return (
                 item.state === state
@@ -135,13 +89,15 @@ export default function Dashboard() {
                 && item.year <= maxYear
                 && item.mileage >= minMileageValue
                 && item.mileage <= maxMileageValue
-                && profitPercentage >= minProfit
-                && profitPercentage <= maxProfit)
+                // && profitPercentage >= minProfit
+                // && profitPercentage <= maxProfit
+            );
         })
         setTableData(filteredData)
         setLoading(false)
     }
     console.log(tableData)
+
 
     return (
         <div className='dashboard-container'>
@@ -190,11 +146,11 @@ export default function Dashboard() {
                         </select>
                     </div>
                     <div className='dashboard-select-criteria'>
-                        <div className='dashboard-select-heading'>Car Model Range</div>
+                        <div className='dashboard-select-heading'>Car Model Year</div>
                         <div className="range-slider">
                             <MultiRangeSlider
-                                min={1950}
-                                max={2025}
+                                min={minCarModalYearVal}
+                                max={maxCarModalYearVal}
                                 minValue={minYear}
                                 maxValue={maxYear}
                                 ruler={false}
@@ -214,8 +170,8 @@ export default function Dashboard() {
                         <div className='dashboard-select-heading'>Mileage Range</div>
                         <div className="range-slider">
                             <MultiRangeSlider
-                                min={0}
-                                max={200.000}
+                                min={minMileageFromApiData}
+                                max={maxMileageFromApiData}
                                 minValue={minMileageValue}
                                 maxValue={maxMileageValue}
                                 ruler={false}

@@ -22,11 +22,11 @@ export default function Table({
               <tr>
                 <td>{item.title}</td>
                 <td>{item.year}</td>
-                <td>{item.making}</td>
+                <td>{item.make}</td>
                 <td>{item.model}</td>
                 <td>{item.mileage}</td>
-                <td>${item.listingPrice}</td>
-                <td>${item.marrketValue}</td>
+                <td>{item.price}</td>
+                <td>-</td>
                 {percentageDiff(item.marrketValue, item.listingPrice) >= 20 ?
                   <td>{percentageDiff(item.marrketValue, item.listingPrice)}% ✅</td>
                   :
