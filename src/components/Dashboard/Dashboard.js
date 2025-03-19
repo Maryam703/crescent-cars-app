@@ -48,6 +48,11 @@ export default function Dashboard() {
     const carModalYearVal = apiData.map((item) => item.year)
     const minCarModalYearVal = Math.min(...carModalYearVal)
     const maxCarModalYearVal = Math.max(...carModalYearVal)
+      //cities and states
+      const citiess = apiData.map((item) => item.city.toLowerCase())
+      const staetsss = apiData.map((item) => item.state.toLowerCase())
+      console.log(citiess, staetsss)
+
 
     const handleMileageInput = (e) => {
         set_minMileageValue(e.minValue)
@@ -73,18 +78,18 @@ export default function Dashboard() {
         console.log(apiData)
         const filteredData = apiData.filter((item) => {
             let profitPercentage = percentageDiff(item.marrketValue, item.price);
-            console.log(state)
-            console.log(city)
-            console.log(minMileageValue)
-            console.log(maxMileageValue)
-            console.log(minYear)
-            console.log(maxYear)
+            // console.log(state)
+            // console.log(city)
+            // console.log(minMileageValue)
+            // console.log(maxMileageValue)
+            // console.log(minYear)
+            // console.log(maxYear)
             // console.log(minProfit)
             // console.log(maxProfit)
 
             return (
-                item.state === state
-                && item.city === city
+                item.state.toLowerCase() === state.toLowerCase()
+                // && item.city.toLowerCase() === city.toLowerCase()
                 && item.year >= minYear
                 && item.year <= maxYear
                 && item.mileage >= minMileageValue
