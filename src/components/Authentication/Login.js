@@ -2,53 +2,61 @@ import React, { useState } from 'react'
 import "./LoginSignUp.css"
 import { Link, useNavigate } from 'react-router-dom';
 import Loader from '../Loader/Loader';
-import axios from 'axios';
+import { supabase } from '../supabaseClient';
 
 export default function Login() {
- const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
- const [loading, setLoading] = useState(false)
- const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
 
-  let userData = {
-    email,
-    password
-  }
 
   const loginHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      setLoading(true)
-      let response = await axios.post("/user/login-user", userData)
-      let { user } = response.data;
-   
-      if (user) {
-        localStorage.setItem("user", JSON.stringify(user))
-        navigate("/dashboard")
+      // ✅ Login with email and password
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        alert(`Login failed: ${error.message}`);
+        console.error('Login error:', error.message);
+        setLoading(false);
+        return;
       }
-    } catch (error) {
-      console.error(error)
+
+      console.log('User logged in:', data.user);
+
+      // Redirect to dashboard if login is successful
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Unexpected error:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false)
-  }
+  };
+
 
   return (
     <>
-       {loading && <Loader /> }
-    <div className='signup-login-container'>
-      <div>
-        <div className='signup-login-profle-image'></div>
-        <p className='signup-login-name-logo'>Welcome to the CRESCENT MINE!</p>
+      {loading && <Loader />}
+      <div className='signup-login-container'>
+        <div>
+          <div className='signup-login-profle-image'></div>
+          <p className='signup-login-name-logo'>Welcome to the CRESCENT MINE!</p>
 
-        <input required type='email' value={email} placeholder='Enter your email:' onChange={(e) => setEmail(e.target.value)} />
-        <input required type='password' value={password} placeholder='Enter your password:' onChange={(e) => setPassword(e.target.value)} />
+          <input required type='email' value={email} placeholder='Enter your email:' onChange={(e) => setEmail(e.target.value)} />
+          <input required type='password' value={password} placeholder='Enter your password:' onChange={(e) => setPassword(e.target.value)} />
 
-        <button onClick={loginHandler}>Sign In</button>
+          <button onClick={loginHandler}>Sign In</button>
 
-        <p className='signup-login-redirect-para'>Don't have an account? <Link to="/sign-up">SignUp here!</Link></p>
+          <p className='signup-login-redirect-para'>Don't have an account? <Link to="/sign-up">SignUp here!</Link></p>
+        </div>
       </div>
-    </div>
     </>
   )
 }

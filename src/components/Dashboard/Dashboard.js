@@ -3,7 +3,7 @@ import "./Dashboard.css"
 import Table from '../Table/Table'
 import Loader from "../Loader/Loader"
 import MultiRangeSlider from "multi-range-slider-react";
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../supabaseClient';
 
 export default function Dashboard() {
     const [apiData, setApiData] = useState([])
@@ -20,10 +20,7 @@ export default function Dashboard() {
 
     const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Differences", "Source", "Link"];
 
-    const supabaseApi = 'https://kinwdpewewrluwhjwgdk.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpbndkcGV3ZXdybHV3aGp3Z2RrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMTc4MTIsImV4cCI6MjA1NjU5MzgxMn0.X1p6xlE7XmPJaUI4SugucfmhmmNTCp_e_pu_Dq7-M7Q';
     const tableName = 'cars_data';
-    const supabase = createClient(supabaseApi, supabaseKey);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -48,10 +45,10 @@ export default function Dashboard() {
     const carModalYearVal = apiData.map((item) => item.year)
     const minCarModalYearVal = Math.min(...carModalYearVal)
     const maxCarModalYearVal = Math.max(...carModalYearVal)
-      //cities and states
-      const citiess = apiData.map((item) => item.city.toLowerCase())
-      const staetsss = apiData.map((item) => item.state.toLowerCase())
-      console.log(citiess, staetsss)
+    //cities and states
+    //   const citiess = apiData.map((item) => item.city)
+    //   const staetsss = apiData.map((item) => item.state)
+    //   console.log(citiess, staetsss)
 
 
     const handleMileageInput = (e) => {
@@ -101,7 +98,7 @@ export default function Dashboard() {
         setTableData(filteredData)
         setLoading(false)
     }
-    console.log(tableData)
+    console.log(apiData)
 
 
     return (
