@@ -5,15 +5,14 @@ import App from './App';
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import SignUp from './components/Authentication/SignUp';
 import Dashboard from './components/Dashboard/Dashboard';
-import Table from './components/Table/Table';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />} />
       <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path='/data-table/:data' element={<Table />} />
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
     </>
   )
 )

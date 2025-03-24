@@ -6,50 +6,173 @@ import MultiRangeSlider from "multi-range-slider-react";
 import { supabase } from '../supabaseClient';
 
 export default function Dashboard() {
-    const [apiData, setApiData] = useState([])
     const [loading, setLoading] = useState(false)
     const [state, setState] = useState(null)
-    const [minMileageValue, set_minMileageValue] = useState(100);
-    const [maxMileageValue, set_maxMileageValue] = useState(100000);
+    const [minMileageValue, set_minMileageValue] = useState(0);
+    const [maxMileageValue, set_maxMileageValue] = useState(150000);
     const [minProfit, setMinProfit] = useState(0);
     const [maxProfit, setMaxProfit] = useState(70);
-    const [minYear, setMinYear] = useState(2000);
-    const [maxYear, setMaxYear] = useState(2010);
+    const [minYear, setMinYear] = useState(1900);
+    const [maxYear, setMaxYear] = useState(2025);
     const [city, setCity] = useState(null);
     const [tableData, setTableData] = useState([]);
+    const [minCarModalYear, setMinCarModalYear] = useState(null)
+    const [maxCarModalYear, setMaxCarModalYear] = useState(null)
+    const [minCarMileage, setMinCarMileage] = useState(null)
+    const [maxCarMileage, setMaxCarMileage] = useState(null)
+    const [cities, setCities] = useState([])
+    const [states, setStates] = useState([])
 
-    const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Differences", "Source", "Link"];
+    const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Difference(%)", "Source", "Link"];
 
-    const tableName = 'cars_data';
+    const tableName = process.env.REACT_APP_TABLE_NAME
 
     useEffect(() => {
-        const fetchData = async () => {
-            const { data, error } = await supabase
-                .from(tableName)
-                .select('*');
+        const fetchYearRange = async () => {
+            try {
+                // Fetch year values, ignoring null and invalid entries
+                const { data, error } = await supabase
+                    .from('cars_data')
+                    .select('year')
+                    .not('year', 'is', null); // Ignore null year values
 
-            if (error) {
-                console.error(error);
-            } else {
-                setApiData(data);
+                if (error) {
+                    console.error('Error fetching year data:', error);
+                    return;
+                }
+
+                if (!data || data.length === 0) {
+                    console.log('No valid year data available.');
+                    return;
+                }
+
+                // Helper function to clean and parse year to number
+                const parseYear = (value) => {
+                    const cleanedValue = value?.toString().replace(/[^0-9]/g, '');
+                    return cleanedValue ? parseInt(cleanedValue, 10) : null;
+                };
+
+                // Filter and parse valid year values
+                const validYears = data
+                    .map((item) => parseYear(item.year))
+                    .filter((year) => year !== null && !isNaN(year));
+
+                if (validYears.length === 0) {
+                    console.log('No valid year values after filtering.');
+                    return;
+                }
+
+                // Calculate minimum and maximum year
+                const minYear = Math.min(...validYears);
+                const maxYear = Math.max(...validYears);
+
+                console.log('Minimum year:', minYear);
+                console.log('Maximum year:', maxYear);
+
+                setMinCarModalYear(minYear)
+                setMaxCarModalYear(maxYear)
+            } catch (error) {
+                console.error('Unexpected error:', error);
             }
         };
 
-        fetchData();
-    }, [tableName]);
-    //min and max value of mileage
-    const mileageVal = apiData.map((item) => item.mileage)
-    const minMileageFromApiData = Math.min(...mileageVal)
-    const maxMileageFromApiData = Math.max(...mileageVal)
-    //min and max value of car model in year
-    const carModalYearVal = apiData.map((item) => item.year)
-    const minCarModalYearVal = Math.min(...carModalYearVal)
-    const maxCarModalYearVal = Math.max(...carModalYearVal)
-    //cities and states
-    //   const citiess = apiData.map((item) => item.city)
-    //   const staetsss = apiData.map((item) => item.state)
-    //   console.log(citiess, staetsss)
+        fetchYearRange();
+    }, []);
 
+    useEffect(() => {
+        const fetchMileageRange = async () => {
+            try {
+                // Fetch mileage values, ignoring null and invalid entries
+                const { data, error } = await supabase
+                    .from('cars_data')
+                    .select('mileage')
+                    .not('mileage', 'is', null); // Ignore null mileage values
+
+                if (error) {
+                    console.error('Error fetching mileage data:', error);
+                    return;
+                }
+
+                if (!data || data.length === 0) {
+                    console.log('No valid mileage data available.');
+                    return;
+                }
+
+                // Helper function to clean and parse mileage to number
+                const parseMileage = (value) => {
+                    const cleanedValue = value?.toString().replace(/[^0-9.]/g, '');
+                    return cleanedValue ? parseFloat(cleanedValue) : null;
+                };
+
+                // Filter and parse valid mileage values
+                const validMileages = data
+                    .map((item) => parseMileage(item.mileage))
+                    .filter((mileage) => mileage !== null && !isNaN(mileage));
+
+                if (validMileages.length === 0) {
+                    console.log('No valid mileage values after filtering.');
+                    return;
+                }
+
+                // Calculate minimum and maximum mileage
+                const minMileage = Math.min(...validMileages);
+                const maxMileage = Math.max(...validMileages);
+
+                console.log('Minimum mileage:', minMileage);
+                console.log('Maximum mileage:', maxMileage);
+
+                setMinCarMileage(minMileage)
+                setMaxCarMileage(maxMileage)
+
+            } catch (error) {
+                console.error('Unexpected error:', error);
+            }
+        };
+
+        fetchMileageRange();
+    }, []);
+
+    useEffect(() => {
+        const fetchCities = async () => {
+            const { data, error } = await supabase
+                .from(tableName) // Replace with your table name
+                .select('city');
+
+            if (error) {
+                console.error('Error fetching cities:', error);
+                return [];
+            }
+
+            // Extract city names from the result
+            const allCities = data.map(item => item.city);
+            const cities = [...new Set(allCities)]
+            setCities(cities)
+            console.log('Cities:', cities);
+        };
+
+        fetchCities();
+    }, [])
+
+    useEffect(() => {
+        const fetchStates = async () => {
+            const { data, error } = await supabase
+                .from(tableName) // Replace with your table name
+                .select('state');
+
+            if (error) {
+                console.error('Error fetching states:', error);
+                return [];
+            }
+
+            // Extract city names from the result
+            const allStates = data.map(item => item.state);
+            const states = [...new Set(allStates)]
+            setStates(states)
+            console.log('States:', states);
+        };
+
+        fetchStates();
+    }, [])
 
     const handleMileageInput = (e) => {
         set_minMileageValue(e.minValue)
@@ -70,35 +193,52 @@ export default function Dashboard() {
         return profitPercentage
     }
 
-    const searchHandler = () => {
+    const searchHandler = async () => {
+        //let profitPercentage = percentageDiff(item.marrketValue, item.price);
         setLoading(true)
-        console.log(apiData)
-        const filteredData = apiData.filter((item) => {
-            let profitPercentage = percentageDiff(item.marrketValue, item.price);
-            // console.log(state)
-            // console.log(city)
-            // console.log(minMileageValue)
-            // console.log(maxMileageValue)
-            // console.log(minYear)
-            // console.log(maxYear)
-            // console.log(minProfit)
-            // console.log(maxProfit)
+        console.log(state)
+        console.log(city)
+        console.log(minMileageValue)
+        console.log(maxMileageValue)
+        console.log(minYear)
+        console.log(maxYear)
+        // console.log(minProfit)
+        // console.log(maxProfit)
+        try {
+            const { data, error } = await supabase
+                .from(tableName)
+                .select('*')
+                .eq('state', state)
+                //.eq('city', city)
+                .gte('year::integer', minYear)
+                .lte('year::integer', maxYear)
+                .gte('mileage::integer', minMileageValue)
+                .lte('mileage::integer', maxMileageValue)
 
-            return (
-                item.state.toLowerCase() === state.toLowerCase()
-                // && item.city.toLowerCase() === city.toLowerCase()
-                && item.year >= minYear
-                && item.year <= maxYear
-                && item.mileage >= minMileageValue
-                && item.mileage <= maxMileageValue
-                // && profitPercentage >= minProfit
-                // && profitPercentage <= maxProfit
-            );
-        })
-        setTableData(filteredData)
+            console.log(data)
+            console.log(error)
+            setTableData(data)
+
+            if (error) {
+                console.error(error)
+            }
+
+        } catch (error) {
+            console.error(error)
+        }
+
+        // return (
+        //     item.state === state
+        //     // && item.city.toLowerCase() === city.toLowerCase()
+        //     && item.year >= minYear
+        //     && item.year <= maxYear
+        //     && item.mileage >= minMileageValue
+        //     && item.mileage <= maxMileageValue
+        //     // && profitPercentage >= minProfit
+        //     // && profitPercentage <= maxProfit
+        // );
         setLoading(false)
     }
-    console.log(apiData)
 
 
     return (
@@ -132,8 +272,8 @@ export default function Dashboard() {
                         <select id='state-options'
                             onChange={(e) => setState(e.target.value)}>
                             <option value="" >--Choose an option--</option>
-                            {apiData && apiData?.map((item) => {
-                                return (<option value={item.state}>{item.state}</option>)
+                            {states && states?.map((state) => {
+                                return (<option value={state} key={state}>{state}</option>)
                             })}
                         </select>
                     </div>
@@ -142,8 +282,8 @@ export default function Dashboard() {
                         <select id='state-options'
                             onChange={(e) => setCity(e.target.value)}>
                             <option value="" >--Choose an option--</option>
-                            {apiData && apiData?.map((item) => {
-                                return (<option value={item.city}>{item.city}</option>)
+                            {cities && cities?.map((city) => {
+                                return (<option value={city} key={city}>{city}</option>)
                             })}
                         </select>
                     </div>
@@ -151,8 +291,8 @@ export default function Dashboard() {
                         <div className='dashboard-select-heading'>Car Model Year</div>
                         <div className="range-slider">
                             <MultiRangeSlider
-                                min={minCarModalYearVal}
-                                max={maxCarModalYearVal}
+                                min={minCarModalYear}
+                                max={maxCarModalYear}
                                 minValue={minYear}
                                 maxValue={maxYear}
                                 ruler={false}
@@ -172,8 +312,8 @@ export default function Dashboard() {
                         <div className='dashboard-select-heading'>Mileage Range</div>
                         <div className="range-slider">
                             <MultiRangeSlider
-                                min={minMileageFromApiData}
-                                max={maxMileageFromApiData}
+                                min={minCarMileage}
+                                max={maxCarMileage}
                                 minValue={minMileageValue}
                                 maxValue={maxMileageValue}
                                 ruler={false}
