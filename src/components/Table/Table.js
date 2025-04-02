@@ -26,13 +26,15 @@ export default function Table({
                 <td>{item.model}</td>
                 <td>{item.mileage}</td>
                 <td>${Number(item.price.replace("$", "").replace(",", ""))}</td>
+                <td>$</td>
                 <td>-</td>
-                <td>-</td>
-                {/* {percentageDiff(item.marrketValue, item.listingPrice) >= 20 ?
-                  <td>{percentageDiff(item.marrketValue, item.listingPrice)}% ✅</td>
+                {/* <td>${Number(item.marketPrice.replace("$", "").replace(",", ""))}</td>
+                {percentageDiff(Number(item.marketPrice.replace("$", "").replace(",", "")), Number(item.price.replace("$", "").replace(",", ""))) >= 20 ?
+                  <td>{percentageDiff(Number(item.marketPrice.replace("$", "").replace(",", "")), Number(item.price.replace("$", "").replace(",", "")))}% ✅</td>
                   :
-                  <td>{percentageDiff(item.marrketValue, item.listingPrice)}%</td>} */}
-                <td>{item.source}</td>
+                  <td>{percentageDiff(Number(item.marketPrice.replace("$", "").replace(",", "")), Number(item.price.replace("$", "").replace(",", "")))}%</td>}
+            */}
+             <td>{item.source}</td> 
                 <td><Link to={item.link}>visit🔗</Link></td>
               </tr>
             );

@@ -8,20 +8,20 @@ import { supabase } from '../supabaseClient';
 export default function Dashboard() {
     const [loading, setLoading] = useState(false)
     const [state, setState] = useState(null)
+    const [city, setCity] = useState(null);
+    const [minCarMileage, setMinCarMileage] = useState(null)
+    const [maxCarMileage, setMaxCarMileage] = useState(null)
     const [minMileageValue, set_minMileageValue] = useState(0);
     const [maxMileageValue, set_maxMileageValue] = useState(150000);
-    const [minProfit, setMinProfit] = useState(0);
-    const [maxProfit, setMaxProfit] = useState(70);
     const [minYear, setMinYear] = useState(1900);
     const [maxYear, setMaxYear] = useState(2025);
-    const [city, setCity] = useState(null);
     const [tableData, setTableData] = useState([]);
     const [minCarModalYear, setMinCarModalYear] = useState(null)
     const [maxCarModalYear, setMaxCarModalYear] = useState(null)
-    const [minCarMileage, setMinCarMileage] = useState(null)
-    const [maxCarMileage, setMaxCarMileage] = useState(null)
     const [cities, setCities] = useState([])
     const [states, setStates] = useState([])
+    const [minProfit, setMinProfit] = useState(0);
+    const [maxProfit, setMaxProfit] = useState(70);
 
     const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Difference(%)", "Source", "Link"];
 
@@ -178,14 +178,15 @@ export default function Dashboard() {
         set_minMileageValue(e.minValue)
         set_maxMileageValue(e.maxValue)
     }
-    const handlePriceInput = (e) => {
-        setMinProfit(e.minValue)
-        setMaxProfit(e.maxValue)
-    }
     const handleModelYearInput = (e) => {
         setMinYear(e.minValue)
         setMaxYear(e.maxValue)
     }
+    const handlePriceInput = (e) => {
+        setMinProfit(e.minValue)
+        setMaxProfit(e.maxValue)
+    }
+
 
     const percentageDiff = (marketValue, listingPrice) => {
         let profit = marketValue - listingPrice
@@ -194,7 +195,6 @@ export default function Dashboard() {
     }
 
     const searchHandler = async () => {
-        //let profitPercentage = percentageDiff(item.marrketValue, item.price);
         setLoading(true)
         console.log(state)
         console.log(city)
@@ -204,19 +204,25 @@ export default function Dashboard() {
         console.log(maxYear)
         // console.log(minProfit)
         // console.log(maxProfit)
+          // .select(`
+                //     *,
+                //     ((market_price - listing_price) / listing_price) * 100 as percentage_diff
+                //   `)
+                 // .gte('percentage_diff', minProfit)
+                // .lte('percentage_diff', maxProfit);
+
         try {
             const { data, error } = await supabase
                 .from(tableName)
-                .select('*')
+                .select("*")
                 .eq('state', state)
-                //.eq('city', city)
-                .gte('year::integer', minYear)
-                .lte('year::integer', maxYear)
-                .gte('mileage::integer', minMileageValue)
-                .lte('mileage::integer', maxMileageValue)
-
+                .eq('city', city)
+                .gte('year', minYear)
+                .lte('year', maxYear)
+                .gte('mileage', minMileageValue)
+                .lte('mileage', maxMileageValue)
+        
             console.log(data)
-            console.log(error)
             setTableData(data)
 
             if (error) {
@@ -227,16 +233,6 @@ export default function Dashboard() {
             console.error(error)
         }
 
-        // return (
-        //     item.state === state
-        //     // && item.city.toLowerCase() === city.toLowerCase()
-        //     && item.year >= minYear
-        //     && item.year <= maxYear
-        //     && item.mileage >= minMileageValue
-        //     && item.mileage <= maxMileageValue
-        //     // && profitPercentage >= minProfit
-        //     // && profitPercentage <= maxProfit
-        // );
         setLoading(false)
     }
 

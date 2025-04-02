@@ -5,7 +5,6 @@ import Loader from '../Loader/Loader';
 import { supabase } from '../supabaseClient';
 
 function SignUp() {
-    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false)
