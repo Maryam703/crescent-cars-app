@@ -25,7 +25,7 @@ export default function Table({
                 <td>{item.make}</td>
                 <td>{item.model}</td>
                 <td>{item.mileage}</td>
-                <td>${Number(item.price.replace("$", "").replace(",", ""))}</td>
+                <td>${Number(item.price?.replace("$", "").replace(",", ""))}</td>
                 <td>$</td>
                 <td>-</td>
                 {/* <td>${Number(item.marketPrice.replace("$", "").replace(",", ""))}</td>
