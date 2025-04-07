@@ -17,7 +17,7 @@ export default function Table({
           ))}
         </thead>
         <tbody>
-          {TableData.length > 0 && TableData?.map((item) => {
+          {TableData?.length > 0 && TableData?.map((item) => {
             return (
               <tr>
                 <td>{item.title}</td>
@@ -25,15 +25,14 @@ export default function Table({
                 <td>{item.make}</td>
                 <td>{item.model}</td>
                 <td>{item.mileage}</td>
-                <td>${Number(item.price?.replace("$", "").replace(",", ""))}</td>
-                <td>$</td>
-                <td>-</td>
-                {/* <td>${Number(item.marketPrice.replace("$", "").replace(",", ""))}</td>
-                {percentageDiff(Number(item.marketPrice.replace("$", "").replace(",", "")), Number(item.price.replace("$", "").replace(",", ""))) >= 20 ?
-                  <td>{percentageDiff(Number(item.marketPrice.replace("$", "").replace(",", "")), Number(item.price.replace("$", "").replace(",", "")))}% ✅</td>
+                <td>{item.price}</td>
+                <td>{item.marketprice}</td>
+                {percentageDiff(item.price, item.marketprice) >= 20 ?
+                  <td>{percentageDiff(item.price, item.marketprice)}% ✅</td>
                   :
-                  <td>{percentageDiff(Number(item.marketPrice.replace("$", "").replace(",", "")), Number(item.price.replace("$", "").replace(",", "")))}%</td>}
-            */}
+                  <td>{percentageDiff(item.price, item.marketprice)}%</td>
+                  }
+           
              <td>{item.source}</td> 
                 <td><Link to={item.link}>visit🔗</Link></td>
               </tr>

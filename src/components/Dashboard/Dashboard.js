@@ -188,9 +188,13 @@ export default function Dashboard() {
     }
 
 
-    const percentageDiff = (marketValue, listingPrice) => {
-        let profit = marketValue - listingPrice
-        let profitPercentage = ((profit / marketValue) * 100).toFixed(2)
+    const percentageDiff = (listingPrice, marketPrice) => {
+        const listing = Number(listingPrice?.replace("$", "").replace(",", ""));
+        const market = Number(marketPrice?.replace("$", "").replace(",", ""));
+        console.log(listing, market)
+
+        let profit = market - listing
+        let profitPercentage = ((profit / market) * 100).toFixed(2)
         return profitPercentage
     }
 
@@ -202,14 +206,8 @@ export default function Dashboard() {
         console.log(maxMileageValue)
         console.log(minYear)
         console.log(maxYear)
-        // console.log(minProfit)
-        // console.log(maxProfit)
-          // .select(`
-                //     *,
-                //     ((market_price - listing_price) / listing_price) * 100 as percentage_diff
-                //   `)
-                 // .gte('percentage_diff', minProfit)
-                // .lte('percentage_diff', maxProfit);
+        console.log(minProfit)
+        console.log(maxProfit)
 
         try {
             const { data, error } = await supabase
@@ -221,9 +219,19 @@ export default function Dashboard() {
                 .lte('year', maxYear)
                 .gte('mileage', minMileageValue)
                 .lte('mileage', maxMileageValue)
-        
-            console.log(data)
-            setTableData(data)
+
+                console.log(data)
+
+                const filteredData = data.filter(item =>{
+            
+                    if (!item.price || !item.marketprice || item.price === 0 || item.marketprice === 0) return false;
+            
+                    const percentDiff = percentageDiff(item.price, item.marketprice)
+                    return percentDiff >= minProfit && percentDiff <= maxProfit;
+                });
+            
+                console.log('Filtered Data:', filteredData);
+                setTableData(filteredData);
 
             if (error) {
                 console.error(error)
@@ -235,7 +243,7 @@ export default function Dashboard() {
 
         setLoading(false)
     }
-
+console.log(tableData)
 
     return (
         <div className='dashboard-container'>
