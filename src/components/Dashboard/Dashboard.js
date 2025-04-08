@@ -12,10 +12,10 @@ export default function Dashboard() {
     const [minCarMileage, setMinCarMileage] = useState(null)
     const [maxCarMileage, setMaxCarMileage] = useState(null)
     const [minMileageValue, set_minMileageValue] = useState(0);
-    const [maxMileageValue, set_maxMileageValue] = useState(150000);
+    const [maxMileageValue, set_maxMileageValue] = useState(200000);
     const [minYear, setMinYear] = useState(1900);
     const [maxYear, setMaxYear] = useState(2025);
-    const [tableData, setTableData] = useState([]);
+    const [tableData, setTableData] = useState(null);
     const [minCarModalYear, setMinCarModalYear] = useState(null)
     const [maxCarModalYear, setMaxCarModalYear] = useState(null)
     const [cities, setCities] = useState([])
@@ -146,7 +146,8 @@ export default function Dashboard() {
             // Extract city names from the result
             const allCities = data.map(item => item.city);
             const cities = [...new Set(allCities)]
-            setCities(cities)
+            const sortedCities = cities.sort()
+            setCities(sortedCities)
             console.log('Cities:', cities);
         };
 
@@ -167,7 +168,8 @@ export default function Dashboard() {
             // Extract city names from the result
             const allStates = data.map(item => item.state);
             const states = [...new Set(allStates)]
-            setStates(states)
+            const sortedStates = states.sort()
+            setStates(sortedStates)
             console.log('States:', states);
         };
 
