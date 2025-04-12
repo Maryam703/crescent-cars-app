@@ -7,7 +7,7 @@ export default function Table({
   TableData,
   percentageDiff
 }) {
-
+//console.log(TableData)
   return (
     <div>
       {TableData?.length === 0 ? 
@@ -27,12 +27,12 @@ export default function Table({
                <td>{item.make}</td>
                <td>{item.model}</td>
                <td>{item.mileage}</td>
-               <td>{item.price}</td>
-               <td>{item.marketprice}</td>
-               {percentageDiff(item.price, item.marketprice) >= 20 ?
-                 <td>{percentageDiff(item.price, item.marketprice)}% ✅</td>
+               <td>{item.listingPrice[0]}</td>
+               <td>{item.marketPrice}</td>
+               {percentageDiff(item.listingPrice[0], item.marketPrice) >= 20 ?
+                 <td>{percentageDiff(item.listingPrice[0], item.marketPrice)}% ✅</td>
                  :
-                 <td>{percentageDiff(item.price, item.marketprice)}%</td>
+                 <td>{percentageDiff(item.listingPrice[0], item.marketPrice)}%</td>
                  }
           
             <td>{item.source}</td> 

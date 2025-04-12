@@ -26,13 +26,14 @@ export default function Dashboard() {
     const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Difference(%)", "Source", "Link"];
 
     const tableName = process.env.REACT_APP_TABLE_NAME
+    console.log(tableName)
 
     useEffect(() => {
         const fetchYearRange = async () => {
             try {
                 // Fetch year values, ignoring null and invalid entries
                 const { data, error } = await supabase
-                    .from('cars_data')
+                    .from(tableName)
                     .select('year')
                     .not('year', 'is', null); // Ignore null year values
 
@@ -79,58 +80,58 @@ export default function Dashboard() {
         fetchYearRange();
     }, []);
 
-    useEffect(() => {
-        const fetchMileageRange = async () => {
-            try {
-                // Fetch mileage values, ignoring null and invalid entries
-                const { data, error } = await supabase
-                    .from('cars_data')
-                    .select('mileage')
-                    .not('mileage', 'is', null); // Ignore null mileage values
+    // useEffect(() => {
+    //     const fetchMileageRange = async () => {
+    //         try {
+    //             // Fetch mileage values, ignoring null and invalid entries
+    //             const { data, error } = await supabase
+    //                 .from(tableName)
+    //                 .select('mileage')
+    //                 .not('mileage', 'is', null); // Ignore null mileage values
 
-                if (error) {
-                    console.error('Error fetching mileage data:', error);
-                    return;
-                }
+    //             if (error) {
+    //                 console.error('Error fetching mileage data:', error);
+    //                 return;
+    //             }
 
-                if (!data || data.length === 0) {
-                    console.log('No valid mileage data available.');
-                    return;
-                }
+    //             if (!data || data.length === 0) {
+    //                 console.log('No valid mileage data available.');
+    //                 return;
+    //             }
 
-                // Helper function to clean and parse mileage to number
-                const parseMileage = (value) => {
-                    const cleanedValue = value?.toString().replace(/[^0-9.]/g, '');
-                    return cleanedValue ? parseFloat(cleanedValue) : null;
-                };
+    //             // Helper function to clean and parse mileage to number
+    //             const parseMileage = (value) => {
+    //                 const cleanedValue = value?.toString().replace(/[^0-9.]/g, '');
+    //                 return cleanedValue ? parseFloat(cleanedValue) : null;
+    //             };
 
-                // Filter and parse valid mileage values
-                const validMileages = data
-                    .map((item) => parseMileage(item.mileage))
-                    .filter((mileage) => mileage !== null && !isNaN(mileage));
+    //             // Filter and parse valid mileage values
+    //             const validMileages = data
+    //                 .map((item) => parseMileage(item.mileage))
+    //                 .filter((mileage) => mileage !== null && !isNaN(mileage));
 
-                if (validMileages.length === 0) {
-                    console.log('No valid mileage values after filtering.');
-                    return;
-                }
+    //             if (validMileages.length === 0) {
+    //                 console.log('No valid mileage values after filtering.');
+    //                 return;
+    //             }
 
-                // Calculate minimum and maximum mileage
-                const minMileage = Math.min(...validMileages);
-                const maxMileage = Math.max(...validMileages);
+    //             // Calculate minimum and maximum mileage
+    //             const minMileage = Math.min(...validMileages);
+    //             const maxMileage = Math.max(...validMileages);
 
-                console.log('Minimum mileage:', minMileage);
-                console.log('Maximum mileage:', maxMileage);
+    //             console.log('Minimum mileage:', minMileage);
+    //             console.log('Maximum mileage:', maxMileage);
 
-                setMinCarMileage(minMileage)
-                setMaxCarMileage(maxMileage)
+    //             setMinCarMileage(minMileage)
+    //             setMaxCarMileage(maxMileage)
 
-            } catch (error) {
-                console.error('Unexpected error:', error);
-            }
-        };
+    //         } catch (error) {
+    //             console.error('Unexpected error:', error);
+    //         }
+    //     };
 
-        fetchMileageRange();
-    }, []);
+    //     fetchMileageRange();
+    // }, []);
 
     useEffect(() => {
         const fetchCities = async () => {
@@ -189,11 +190,47 @@ export default function Dashboard() {
         setMaxProfit(e.maxValue)
     }
 
+   
+    const get_listingPrice = async (listingId) => {
+        const limit = 1000;
+        let offset = 0;
+        let allPrices = [];
+        let hasMore = true;
+
+        try {
+            while (hasMore) {
+            const { data: priceData, error: priceError } = await supabase
+                .from('cars_data')
+                .select('price')
+                .eq('id', listingId) // 👈 replace with the actual market ID you have
+                .range(offset, offset + limit - 1); 
+
+            if (priceError) {
+                console.error('Failed to get listing_price_id:', priceError);
+                break;
+            }
+
+            allPrices = allPrices.concat(priceData);
+            offset += limit;
+
+            if (priceData.length < limit) {
+                hasMore = false; // No more data
+            }
+        }
+        console.log('Total prices fetched:', allPrices.length);
+        return allPrices.map(item => item.price);
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
 
     const percentageDiff = (listingPrice, marketPrice) => {
+        console.log(listingPrice, marketPrice)
         const listing = Number(listingPrice?.replace("$", "").replace(",", ""));
         const market = Number(marketPrice?.replace("$", "").replace(",", ""));
-        console.log(listing, market)
+        //console.log(listing, market)
 
         let profit = market - listing
         let profitPercentage = ((profit / market) * 100).toFixed(2)
@@ -219,25 +256,33 @@ export default function Dashboard() {
                 .eq('city', city)
                 .gte('year', minYear)
                 .lte('year', maxYear)
-                .gte('mileage', minMileageValue)
-                .lte('mileage', maxMileageValue)
+            // .gte('mileage', minMileageValue)
+            // .lte('mileage', maxMileageValue)
 
-                console.log(data)
+            //console.log(data)
 
-                const filteredData = data.filter(item =>{
-            
-                    if (!item.price || !item.marketprice || item.price === 0 || item.marketprice === 0) return false;
-            
-                    const percentDiff = percentageDiff(item.price, item.marketprice)
+            const pricePromises = data.map((item) => item.matched_data_id && get_listingPrice(item.matched_data_id))
+
+            const listingPrices = await Promise.all(pricePromises);
+            console.log(listingPrices);
+
+            // Merge prices back into original data
+            const updatedData = data.map((item, index) => ({
+                ...item,
+                listingPrice: listingPrices[index] // 👈 new column
+            }));
+            console.log(updatedData);
+
+
+            let filteredData = updatedData?.filter(item => {     
+                if (item.marketPrice !== null && item.listingPrice !== null && item?.listingPrice !== undefined) { 
+                    const percentDiff = percentageDiff(item?.listingPrice[0], item?.marketPrice)
                     return percentDiff >= minProfit && percentDiff <= maxProfit;
-                });
-            
-                console.log('Filtered Data:', filteredData);
-                setTableData(filteredData);
+                }
+            });
 
-            if (error) {
-                console.error(error)
-            }
+            console.log('Filtered Data:', filteredData);
+            setTableData(filteredData);
 
         } catch (error) {
             console.error(error)
@@ -245,7 +290,7 @@ export default function Dashboard() {
 
         setLoading(false)
     }
-console.log(tableData)
+    console.log(tableData)
 
     return (
         <div className='dashboard-container'>

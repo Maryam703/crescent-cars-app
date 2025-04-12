@@ -13,7 +13,7 @@ function ProtectedRoute({children}) {
     if (currUser && currUser?.role === ("authenticated")) {
         return children
     }else{
-        navigate("/")
+        navigate("/login")
     }
 }
 

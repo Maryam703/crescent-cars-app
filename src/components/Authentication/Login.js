@@ -34,7 +34,7 @@ export default function Login() {
       console.log('User logged in:', data.user);
 
       // Redirect to dashboard if login is successful
-      navigate('/dashboard');
+      navigate('/');
     } catch (err) {
       console.error('Unexpected error:', err);
     } finally {
