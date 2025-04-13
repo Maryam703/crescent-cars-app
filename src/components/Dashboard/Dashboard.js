@@ -26,16 +26,14 @@ export default function Dashboard() {
     const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Difference(%)", "Source", "Link"];
 
     const tableName = process.env.REACT_APP_TABLE_NAME
-    console.log(tableName)
 
     useEffect(() => {
         const fetchYearRange = async () => {
             try {
-                // Fetch year values, ignoring null and invalid entries
                 const { data, error } = await supabase
                     .from(tableName)
                     .select('year')
-                    .not('year', 'is', null); // Ignore null year values
+                    .not('year', 'is', null);
 
                 if (error) {
                     console.error('Error fetching year data:', error);
@@ -47,13 +45,11 @@ export default function Dashboard() {
                     return;
                 }
 
-                // Helper function to clean and parse year to number
                 const parseYear = (value) => {
                     const cleanedValue = value?.toString().replace(/[^0-9]/g, '');
                     return cleanedValue ? parseInt(cleanedValue, 10) : null;
                 };
 
-                // Filter and parse valid year values
                 const validYears = data
                     .map((item) => parseYear(item.year))
                     .filter((year) => year !== null && !isNaN(year));
@@ -63,7 +59,6 @@ export default function Dashboard() {
                     return;
                 }
 
-                // Calculate minimum and maximum year
                 const minYear = Math.min(...validYears);
                 const maxYear = Math.max(...validYears);
 
@@ -80,63 +75,59 @@ export default function Dashboard() {
         fetchYearRange();
     }, []);
 
-    // useEffect(() => {
-    //     const fetchMileageRange = async () => {
-    //         try {
-    //             // Fetch mileage values, ignoring null and invalid entries
-    //             const { data, error } = await supabase
-    //                 .from(tableName)
-    //                 .select('mileage')
-    //                 .not('mileage', 'is', null); // Ignore null mileage values
+    useEffect(() => {
+        const fetchMileageRange = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from(tableName)
+                    .select('mileage')
+                    .not('mileage', 'is', null);
 
-    //             if (error) {
-    //                 console.error('Error fetching mileage data:', error);
-    //                 return;
-    //             }
+                if (error) {
+                    console.error('Error fetching mileage data:', error);
+                    return;
+                }
 
-    //             if (!data || data.length === 0) {
-    //                 console.log('No valid mileage data available.');
-    //                 return;
-    //             }
+                if (!data || data.length === 0) {
+                    console.log('No valid mileage data available.');
+                    return;
+                }
 
-    //             // Helper function to clean and parse mileage to number
-    //             const parseMileage = (value) => {
-    //                 const cleanedValue = value?.toString().replace(/[^0-9.]/g, '');
-    //                 return cleanedValue ? parseFloat(cleanedValue) : null;
-    //             };
+                const parseMileage = (value) => {
+                    const cleanedValue = value?.toString().replace(/[^0-9.]/g, '');
+                    return cleanedValue ? parseFloat(cleanedValue) : null;
+                };
 
-    //             // Filter and parse valid mileage values
-    //             const validMileages = data
-    //                 .map((item) => parseMileage(item.mileage))
-    //                 .filter((mileage) => mileage !== null && !isNaN(mileage));
+                const validMileages = data
+                    .map((item) => parseMileage(item.mileage))
+                    .filter((mileage) => mileage !== null && !isNaN(mileage));
 
-    //             if (validMileages.length === 0) {
-    //                 console.log('No valid mileage values after filtering.');
-    //                 return;
-    //             }
+                if (validMileages.length === 0) {
+                    console.log('No valid mileage values after filtering.');
+                    return;
+                }
 
-    //             // Calculate minimum and maximum mileage
-    //             const minMileage = Math.min(...validMileages);
-    //             const maxMileage = Math.max(...validMileages);
+                const minMileage = Math.min(...validMileages);
+                const maxMileage = Math.max(...validMileages);
 
-    //             console.log('Minimum mileage:', minMileage);
-    //             console.log('Maximum mileage:', maxMileage);
+                console.log('Minimum mileage:', minMileage);
+                console.log('Maximum mileage:', maxMileage);
 
-    //             setMinCarMileage(minMileage)
-    //             setMaxCarMileage(maxMileage)
+                setMinCarMileage(minMileage)
+                setMaxCarMileage(maxMileage)
 
-    //         } catch (error) {
-    //             console.error('Unexpected error:', error);
-    //         }
-    //     };
+            } catch (error) {
+                console.error('Unexpected error:', error);
+            }
+        };
 
-    //     fetchMileageRange();
-    // }, []);
+        fetchMileageRange();
+    }, []);
 
     useEffect(() => {
         const fetchCities = async () => {
             const { data, error } = await supabase
-                .from(tableName) // Replace with your table name
+                .from(tableName)
                 .select('city');
 
             if (error) {
@@ -144,7 +135,6 @@ export default function Dashboard() {
                 return [];
             }
 
-            // Extract city names from the result
             const allCities = data.map(item => item.city);
             const cities = [...new Set(allCities)]
             const sortedCities = cities.sort()
@@ -158,7 +148,7 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchStates = async () => {
             const { data, error } = await supabase
-                .from(tableName) // Replace with your table name
+                .from(tableName)
                 .select('state');
 
             if (error) {
@@ -166,7 +156,6 @@ export default function Dashboard() {
                 return [];
             }
 
-            // Extract city names from the result
             const allStates = data.map(item => item.state);
             const states = [...new Set(allStates)]
             const sortedStates = states.sort()
@@ -190,98 +179,64 @@ export default function Dashboard() {
         setMaxProfit(e.maxValue)
     }
 
-   
-    const get_listingPrice = async (listingId) => {
-        const limit = 1000;
-        let offset = 0;
-        let allPrices = [];
-        let hasMore = true;
+    // const percentageDiff = (listingPrice, marketPrice) => {
+    //     const listing = Number(listingPrice?.replace("$", "").replace(",", ""));
+    //     const market = Number(marketPrice?.replace("$", "").replace(",", ""));
 
-        try {
-            while (hasMore) {
-            const { data: priceData, error: priceError } = await supabase
-                .from('cars_data')
-                .select('price')
-                .eq('id', listingId) // 👈 replace with the actual market ID you have
-                .range(offset, offset + limit - 1); 
+    //     let profit = market - listing
+    //     let profitPercentage = ((profit / market) * 100).toFixed(2)
+    //     return profitPercentage
+    // }
 
-            if (priceError) {
-                console.error('Failed to get listing_price_id:', priceError);
-                break;
-            }
-
-            allPrices = allPrices.concat(priceData);
-            offset += limit;
-
-            if (priceData.length < limit) {
-                hasMore = false; // No more data
-            }
-        }
-        console.log('Total prices fetched:', allPrices.length);
-        return allPrices.map(item => item.price);
-
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-
-    const percentageDiff = (listingPrice, marketPrice) => {
-        console.log(listingPrice, marketPrice)
-        const listing = Number(listingPrice?.replace("$", "").replace(",", ""));
-        const market = Number(marketPrice?.replace("$", "").replace(",", ""));
-        //console.log(listing, market)
-
-        let profit = market - listing
-        let profitPercentage = ((profit / market) * 100).toFixed(2)
-        return profitPercentage
+    let percentDiff = (item) => {
+        return Number(item?.replace("%", ""))
     }
 
     const searchHandler = async () => {
         setLoading(true)
-        console.log(state)
-        console.log(city)
-        console.log(minMileageValue)
-        console.log(maxMileageValue)
-        console.log(minYear)
-        console.log(maxYear)
-        console.log(minProfit)
-        console.log(maxProfit)
 
         try {
-            const { data, error } = await supabase
+            const { data: carsData, error: carsError } = await supabase
                 .from(tableName)
-                .select("*")
+                .select('*')
                 .eq('state', state)
                 .eq('city', city)
                 .gte('year', minYear)
                 .lte('year', maxYear)
-            // .gte('mileage', minMileageValue)
-            // .lte('mileage', maxMileageValue)
+                .gte('mileage', minMileageValue)
+                .lte('mileage', maxMileageValue)
 
-            //console.log(data)
+            // const carIds = carsData.map(car => car.id);
 
-            const pricePromises = data.map((item) => item.matched_data_id && get_listingPrice(item.matched_data_id))
+            // const { data: marketData, error: marketError } = await supabase
+            //     .from('matched_market_data')
+            //     .select('*')
+            //     .in('matched_data_id', carIds);
 
-            const listingPrices = await Promise.all(pricePromises);
-            console.log(listingPrices);
+            //     console.log(marketData)
 
-            // Merge prices back into original data
-            const updatedData = data.map((item, index) => ({
-                ...item,
-                listingPrice: listingPrices[index] // 👈 new column
-            }));
-            console.log(updatedData);
+            // const joinedData = carsData.map(car => {
+            //     const marketPriceData = marketData.find(data => data.matched_data_id === car.id);
+            //     //console.log(marketPriceData)
+            //     return { ...car, marketPrice: marketPriceData ? marketPriceData.marketPrice : null };
+            // });
 
+            // const result = joinedData?.filter((item) => item.marketPrice !== null);
+            // console.log(result)
 
-            let filteredData = updatedData?.filter(item => {     
-                if (item.marketPrice !== null && item.listingPrice !== null && item?.listingPrice !== undefined) { 
-                    const percentDiff = percentageDiff(item?.listingPrice[0], item?.marketPrice)
-                    return percentDiff >= minProfit && percentDiff <= maxProfit;
-                }
-            });
+            // let filteredData = carsData?.filter(item => {
+            //     if (item.marketPrice !== null && item.price !== null ) {
+            //         const percentDiff = percentageDiff(item?.price, item?.marketPrice)
+            //         console.log(percentDiff)
+            //         return percentDiff >= minProfit && percentDiff <= maxProfit;
+            //     }
+            // });
 
-            console.log('Filtered Data:', filteredData);
+            let filteredData = carsData?.filter((item) => {
+                let percentDiff = percentDiff(item?.difference_average)
+                return percentDiff >= minProfit && percentDiff <= maxProfit
+            })
+
             setTableData(filteredData);
 
         } catch (error) {
@@ -290,7 +245,6 @@ export default function Dashboard() {
 
         setLoading(false)
     }
-    console.log(tableData)
 
     return (
         <div className='dashboard-container'>
@@ -407,7 +361,7 @@ export default function Dashboard() {
 
                 <div className='dashboard-data-table-container'>
                     <div className="dashboard-data-table-inner-container">
-                        <Table TableHeadings={tableHeadings} TableData={tableData} percentageDiff={percentageDiff} />
+                        <Table TableHeadings={tableHeadings} TableData={tableData} percentDiff={percentDiff} />
                     </div>
                 </div>
 
