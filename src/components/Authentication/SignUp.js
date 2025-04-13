@@ -25,8 +25,6 @@ function SignUp() {
                 return;
             }
 
-            console.log('User:', data.user);
-            console.log('Session:', data.session);
             setLoading(false)
 
             if (data.user) {

@@ -20,7 +20,6 @@ export default function Table({
           </thead>
           {<tbody>
             {TableData?.length > 0 && TableData?.map((item) => {
-              console.log(item?.di)
               return (
                 <tr>
                   <td>{item.title}</td>

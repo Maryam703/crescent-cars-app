@@ -41,7 +41,6 @@ export default function Dashboard() {
                 }
 
                 if (!data || data.length === 0) {
-                    console.log('No valid year data available.');
                     return;
                 }
 
@@ -55,15 +54,11 @@ export default function Dashboard() {
                     .filter((year) => year !== null && !isNaN(year));
 
                 if (validYears.length === 0) {
-                    console.log('No valid year values after filtering.');
                     return;
                 }
 
                 const minYear = Math.min(...validYears);
                 const maxYear = Math.max(...validYears);
-
-                console.log('Minimum year:', minYear);
-                console.log('Maximum year:', maxYear);
 
                 setMinCarModalYear(minYear)
                 setMaxCarModalYear(maxYear)
@@ -89,7 +84,7 @@ export default function Dashboard() {
                 }
 
                 if (!data || data.length === 0) {
-                    console.log('No valid mileage data available.');
+                    
                     return;
                 }
 
@@ -103,15 +98,15 @@ export default function Dashboard() {
                     .filter((mileage) => mileage !== null && !isNaN(mileage));
 
                 if (validMileages.length === 0) {
-                    console.log('No valid mileage values after filtering.');
+                    
                     return;
                 }
 
                 const minMileage = Math.min(...validMileages);
                 const maxMileage = Math.max(...validMileages);
 
-                console.log('Minimum mileage:', minMileage);
-                console.log('Maximum mileage:', maxMileage);
+                
+                
 
                 setMinCarMileage(minMileage)
                 setMaxCarMileage(maxMileage)
@@ -139,7 +134,7 @@ export default function Dashboard() {
             const cities = [...new Set(allCities)]
             const sortedCities = cities.sort()
             setCities(sortedCities)
-            console.log('Cities:', cities);
+            
         };
 
         fetchCities();
@@ -160,7 +155,7 @@ export default function Dashboard() {
             const states = [...new Set(allStates)]
             const sortedStates = states.sort()
             setStates(sortedStates)
-            console.log('States:', states);
+            
         };
 
         fetchStates();
@@ -213,28 +208,28 @@ export default function Dashboard() {
             //     .select('*')
             //     .in('matched_data_id', carIds);
 
-            //     console.log(marketData)
+            //     
 
             // const joinedData = carsData.map(car => {
             //     const marketPriceData = marketData.find(data => data.matched_data_id === car.id);
-            //     //console.log(marketPriceData)
+            //     //
             //     return { ...car, marketPrice: marketPriceData ? marketPriceData.marketPrice : null };
             // });
 
             // const result = joinedData?.filter((item) => item.marketPrice !== null);
-            // console.log(result)
+            // 
 
             // let filteredData = carsData?.filter(item => {
             //     if (item.marketPrice !== null && item.price !== null ) {
             //         const percentDiff = percentageDiff(item?.price, item?.marketPrice)
-            //         console.log(percentDiff)
+            //         
             //         return percentDiff >= minProfit && percentDiff <= maxProfit;
             //     }
             // });
 
             let filteredData = carsData?.filter((item) => {
-                let percentDiff = percentDiff(item?.difference_average)
-                return percentDiff >= minProfit && percentDiff <= maxProfit
+                let percentDiffVal = percentDiff(item?.difference_average)
+                return percentDiffVal >= minProfit && percentDiffVal <= maxProfit
             })
 
             setTableData(filteredData);
