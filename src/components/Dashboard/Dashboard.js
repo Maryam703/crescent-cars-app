@@ -27,6 +27,36 @@ export default function Dashboard() {
 
     const tableName = process.env.REACT_APP_TABLE_NAME
 
+    const stateCityMap = {
+        AK: ['Hwy Anchorage'],
+        AL: ['W Huntsville'],
+        CA: ['Cathedral City', 'Rancho Mirage', 'Humboldt County', 'Vacaville'],
+        CO: ['Colorado Springs', 'Grand Junction'],
+        FL: ['Palmetto Bay', 'LAKE PARK'],
+        'IA/IL': ['Quad Cities'],
+        IL: ['Pkwy Bloomington', 'Ave Ardmore'],
+        KS: ['Road WICHITA'],
+        MA: ['Rd Hyannis', 'Norwood'],
+        MD: ['Pocomoke City'],
+        MO: ['Joplin'],
+        'N/A': ['N/A', 'ONLINE ONLY'],
+        NJ: ['NJ Edison'],
+        NY: ['NY-23 Oneonta'],
+        OH: ['Ave Youngstown', 'Rd. Columbus', 'Ave Waverly', 'Rd Boardman',],
+        ON: [
+            'AJAX', 'BANCROFT', 'BURLINGTON', 'CHATHAM', 'HAWKESBURY', 'KINGSTON',
+            'MARKHAM', 'MISSISSAUGA', 'NEPEAN', 'NEWMARKET', 'OAKVILLE', 'OTTAWA', 'ONLINE ONLY',
+            'PEMBROKE', 'PICKERING', 'RICHMOND HILL', 'SCARBOROUGH', 'STRATFORD', 'THORNHILL', 'THOROLD',
+            'TILBURY', 'TORONTO', 'UNIONVILLE', 'VAUGHAN', 'WINDSOR', 'WOODBRIDGE'
+        ],
+        OR: ['Ave Medford', 'Klamath Falls', 'Portland'],
+        PA: ['Blvd Altoona', 'Ave Ardmore', 'Drive Wilkes-Barre', 'Jersey Shore'],
+        SC: ['Blvd Greer', 'Hwy Charleston', 'Hwy Easley'],
+        TX: ['Houston', 'San Angelo', 'San Antonio', 'Midland'],
+        VA: ['Virginia Beach'],
+        WA: ['St Bellevue'],
+    };
+
     useEffect(() => {
         const fetchYearRange = async () => {
             try {
@@ -84,7 +114,7 @@ export default function Dashboard() {
                 }
 
                 if (!data || data.length === 0) {
-                    
+
                     return;
                 }
 
@@ -98,15 +128,15 @@ export default function Dashboard() {
                     .filter((mileage) => mileage !== null && !isNaN(mileage));
 
                 if (validMileages.length === 0) {
-                    
+
                     return;
                 }
 
                 const minMileage = Math.min(...validMileages);
                 const maxMileage = Math.max(...validMileages);
 
-                
-                
+
+
 
                 setMinCarMileage(minMileage)
                 setMaxCarMileage(maxMileage)
@@ -118,27 +148,6 @@ export default function Dashboard() {
 
         fetchMileageRange();
     }, []);
-
-    useEffect(() => {
-        const fetchCities = async () => {
-            const { data, error } = await supabase
-                .from(tableName)
-                .select('city');
-
-            if (error) {
-                console.error('Error fetching cities:', error);
-                return [];
-            }
-
-            const allCities = data.map(item => item.city);
-            const cities = [...new Set(allCities)]
-            const sortedCities = cities.sort()
-            setCities(sortedCities)
-            
-        };
-
-        fetchCities();
-    }, [])
 
     useEffect(() => {
         const fetchStates = async () => {
@@ -155,11 +164,23 @@ export default function Dashboard() {
             const states = [...new Set(allStates)]
             const sortedStates = states.sort()
             setStates(sortedStates)
-            
+
         };
 
         fetchStates();
     }, [])
+
+    useEffect(() => {
+        const fetchCities = () => {
+            const allCities = stateCityMap[state]
+            const cities = [...new Set(allCities)]
+            const sortedCities = cities.sort()
+            setCities(sortedCities)
+
+        };
+
+        fetchCities();
+    }, [state])
 
     const handleMileageInput = (e) => {
         set_minMileageValue(e.minValue)
@@ -189,49 +210,37 @@ export default function Dashboard() {
 
     const searchHandler = async () => {
         setLoading(true)
-
         try {
             const { data: carsData, error: carsError } = await supabase
                 .from(tableName)
                 .select('*')
                 .eq('state', state)
                 .eq('city', city)
-                .gte('year', minYear)
-                .lte('year', maxYear)
-                .gte('mileage', minMileageValue)
-                .lte('mileage', maxMileageValue)
 
-            // const carIds = carsData.map(car => car.id);
+            if (carsError) {
+                console.log("err:", carsError)
+            }
 
-            // const { data: marketData, error: marketError } = await supabase
-            //     .from('matched_market_data')
-            //     .select('*')
-            //     .in('matched_data_id', carIds);
 
-            //     
+            const filteredData = carsData.filter((car) => {
+                const year = parseInt(car?.year);
+                const mileage = parseInt(car?.mileage);
+                let percentDiffVal = percentDiff(car?.difference_average)
 
-            // const joinedData = carsData.map(car => {
-            //     const marketPriceData = marketData.find(data => data.matched_data_id === car.id);
-            //     //
-            //     return { ...car, marketPrice: marketPriceData ? marketPriceData.marketPrice : null };
-            // });
+                return (
+                    year >= minYear &&
+                    year <= maxYear &&
+                    mileage >= minMileageValue &&
+                    mileage <= maxMileageValue &&
+                    percentDiffVal >= minProfit && percentDiffVal <= maxProfit
+                )
+            });
 
-            // const result = joinedData?.filter((item) => item.marketPrice !== null);
-            // 
 
-            // let filteredData = carsData?.filter(item => {
-            //     if (item.marketPrice !== null && item.price !== null ) {
-            //         const percentDiff = percentageDiff(item?.price, item?.marketPrice)
-            //         
-            //         return percentDiff >= minProfit && percentDiff <= maxProfit;
-            //     }
-            // });
+            const biggerMarketValue = carsData?.filter((item) => item.marketPrice >= item.price)
+            console.log(biggerMarketValue)
 
-            let filteredData = carsData?.filter((item) => {
-                let percentDiffVal = percentDiff(item?.difference_average)
-                return percentDiffVal >= minProfit && percentDiffVal <= maxProfit
-            })
-
+            //setTableData(biggerMarketValue)
             setTableData(filteredData);
 
         } catch (error) {
@@ -240,6 +249,7 @@ export default function Dashboard() {
 
         setLoading(false)
     }
+
 
     return (
         <div className='dashboard-container'>
@@ -295,6 +305,7 @@ export default function Dashboard() {
                                 max={maxCarModalYear}
                                 minValue={minYear}
                                 maxValue={maxYear}
+                                step={1}
                                 ruler={false}
                                 barLeftColor="white"
                                 barRightColor="white"
