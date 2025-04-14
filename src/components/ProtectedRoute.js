@@ -7,13 +7,13 @@ function ProtectedRoute({children}) {
 
     useEffect(() => { 
         let userData = JSON.parse(localStorage.getItem("sb-kinwdpewewrluwhjwgdk-auth-token"));
-        setCurrUser(userData.user)
+        setCurrUser(userData?.user)
     }, [])
 
     if (currUser && currUser?.role === ("authenticated")) {
         return children
     }else{
-        navigate("/login")
+         navigate("/login")
     }
 }
 
