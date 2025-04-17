@@ -283,6 +283,7 @@ export default function Dashboard() {
                                 minValue={minMileageValue}
                                 maxValue={maxMileageValue}
                                 ruler={false}
+                                step={1}
                                 barLeftColor="white"
                                 barRightColor="white"
                                 label={false}
@@ -304,6 +305,7 @@ export default function Dashboard() {
                                 minValue={minProfit}
                                 maxValue={maxProfit}
                                 ruler={false}
+                                step={1}
                                 barLeftColor="white"
                                 barRightColor="white"
                                 label={false}

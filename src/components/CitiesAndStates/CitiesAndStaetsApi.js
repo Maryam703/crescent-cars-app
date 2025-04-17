@@ -1,4 +1,5 @@
 const stateCityMapOfCanadaAndUS = {
+    //canada state city data api
     AB: ["Calgary", "Edmonton", "Red Deer", "Lethbridge", "St. Albert", "Medicine Hat", "Grande Prairie", "Airdrie", "Spruce Grove", "Leduc", "Fort Saskatchewan", "Lloydminster", "Camrose", "Chestermere", "Okotoks"],
     BC: ["Vancouver", "Surrey", "Burnaby", "Richmond", "Abbotsford", "Coquitlam", "Kelowna", "Langley", "Saanich", "Delta", "Nanaimo", "Kamloops", "Chilliwack", "Victoria", "Maple Ridge"],
     MB: ["Winnipeg", "Brandon", "Steinbach", "Thompson", "Portage la Prairie", "Selkirk", "Winkler", "Morden", "Dauphin", "Flin Flon", "The Pas", "Stonewall", "Niverville", "Swan River", "Neepawa"],
@@ -12,7 +13,7 @@ const stateCityMapOfCanadaAndUS = {
     QC: ["Montreal", "Quebec City", "Laval", "Gatineau", "Longueuil", "Sherbrooke", "Saguenay", "Levis", "Trois-Rivières", "Terrebonne", "Saint-Jean-sur-Richelieu", "Repentigny", "Drummondville", "Saint-Jérôme", "Granby"],
     SK: ["Saskatoon", "Regina", "Prince Albert", "Moose Jaw", "Yorkton", "Swift Current", "North Battleford", "Estevan", "Weyburn", "Martensville", "Humboldt", "Melfort", "Meadow Lake", "Lloydminster", "Kindersley"],
     YT: ["Whitehorse", "Dawson City", "Watson Lake", "Haines Junction", "Carmacks", "Faro", "Teslin", "Mayo", "Ross River", "Pelly Crossing", "Burwash Landing", "Destruction Bay", "Beaver Creek", "Old Crow", "Tagish"],
-    //usa
+    //usa state city data api
     AL: ["Huntsville", "W Huntsville", "Birmingham", "Montgomery", "Mobile", "Tuscaloosa", "Hoover", "Dothan", "Auburn", "Decatur", "Madison", "Florence", "Gadsden", "Vestavia Hills", "Phenix City", "Prattville"],
     AK: ["Anchorage", "Hwy Anchorage", "Fairbanks", "Juneau", "Wasilla", "Sitka", "Ketchikan", "Kenai", "Kodiak", "Bethel", "Palmer", "Homer", "Soldotna", "Unalaska", "Valdez", "Nome"],
     AZ: ["Phoenix", "Tucson", "Mesa", "Chandler", "Gilbert", "Glendale", "Scottsdale", "Peoria", "Tempe", "Surprise", "San Tan Valley", "Goodyear", "Buckeye", "Avondale", "Lake Havasu City"],
