@@ -4,6 +4,7 @@ import Table from '../Table/Table'
 import Loader from "../Loader/Loader"
 import MultiRangeSlider from "multi-range-slider-react";
 import { supabase } from '../supabaseClient';
+import stateCityMapOfCanadaAndUS from "../CitiesAndStates/CitiesAndStaetsApi"
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false)
@@ -26,36 +27,6 @@ export default function Dashboard() {
     const tableHeadings = ["Title", "Year", "Making", "Modal", "Mileage", "ListingPrice", "MarketValue", "Difference(%)", "Source", "Link"];
 
     const tableName = process.env.REACT_APP_TABLE_NAME
-
-    const stateCityMap = {
-        AK: ['Hwy Anchorage'],
-        AL: ['W Huntsville'],
-        CA: ['Cathedral City', 'Rancho Mirage', 'Humboldt County', 'Vacaville'],
-        CO: ['Colorado Springs', 'Grand Junction'],
-        FL: ['Palmetto Bay', 'LAKE PARK'],
-        'IA/IL': ['Quad Cities'],
-        IL: ['Pkwy Bloomington', 'Ave Ardmore'],
-        KS: ['Road WICHITA'],
-        MA: ['Rd Hyannis', 'Norwood'],
-        MD: ['Pocomoke City'],
-        MO: ['Joplin'],
-        'N/A': ['N/A', 'ONLINE ONLY'],
-        NJ: ['NJ Edison'],
-        NY: ['NY-23 Oneonta'],
-        OH: ['Ave Youngstown', 'Rd. Columbus', 'Ave Waverly', 'Rd Boardman',],
-        ON: [
-            'AJAX', 'BANCROFT', 'BURLINGTON', 'CHATHAM', 'HAWKESBURY', 'KINGSTON',
-            'MARKHAM', 'MISSISSAUGA', 'NEPEAN', 'NEWMARKET', 'OAKVILLE', 'OTTAWA', 'ONLINE ONLY',
-            'PEMBROKE', 'PICKERING', 'RICHMOND HILL', 'SCARBOROUGH', 'STRATFORD', 'THORNHILL', 'THOROLD',
-            'TILBURY', 'TORONTO', 'UNIONVILLE', 'VAUGHAN', 'WINDSOR', 'WOODBRIDGE'
-        ],
-        OR: ['Ave Medford', 'Klamath Falls', 'Portland'],
-        PA: ['Blvd Altoona', 'Ave Ardmore', 'Drive Wilkes-Barre', 'Jersey Shore'],
-        SC: ['Blvd Greer', 'Hwy Charleston', 'Hwy Easley'],
-        TX: ['Houston', 'San Angelo', 'San Antonio', 'Midland'],
-        VA: ['Virginia Beach'],
-        WA: ['St Bellevue'],
-    };
 
     useEffect(() => {
         const fetchYearRange = async () => {
@@ -151,16 +122,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         const fetchStates = async () => {
-            const { data, error } = await supabase
-                .from(tableName)
-                .select('state');
-
-            if (error) {
-                console.error('Error fetching states:', error);
-                return [];
-            }
-
-            const allStates = data.map(item => item.state);
+            const allStates = Object.keys(stateCityMapOfCanadaAndUS)
             const states = [...new Set(allStates)]
             const sortedStates = states.sort()
             setStates(sortedStates)
@@ -172,7 +134,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         const fetchCities = () => {
-            const allCities = stateCityMap[state]
+            const allCities = stateCityMapOfCanadaAndUS[state]
             const cities = [...new Set(allCities)]
             const sortedCities = cities.sort()
             setCities(sortedCities)
@@ -195,15 +157,6 @@ export default function Dashboard() {
         setMaxProfit(e.maxValue)
     }
 
-    // const percentageDiff = (listingPrice, marketPrice) => {
-    //     const listing = Number(listingPrice?.replace("$", "").replace(",", ""));
-    //     const market = Number(marketPrice?.replace("$", "").replace(",", ""));
-
-    //     let profit = market - listing
-    //     let profitPercentage = ((profit / market) * 100).toFixed(2)
-    //     return profitPercentage
-    // }
-
     let percentDiff = (item) => {
         return Number(item?.replace("%", ""))
     }
@@ -214,8 +167,8 @@ export default function Dashboard() {
             const { data: carsData, error: carsError } = await supabase
                 .from(tableName)
                 .select('*')
-                .eq('state', state)
-                .eq('city', city)
+                .ilike("state", state)
+                .ilike("city", city)
 
             if (carsError) {
                 console.log("err:", carsError)
@@ -236,12 +189,14 @@ export default function Dashboard() {
                 )
             });
 
+            const biggerMarketValueItems = filteredData?.filter((item) => {
+                const marketPrice = Number(item?.marketPrice.replace(/[$,]/g, ""));
+                const price = Number(item?.price.replace(/[$,]/g, ""));
 
-            const biggerMarketValue = carsData?.filter((item) => item.marketPrice >= item.price)
-            console.log(biggerMarketValue)
+                return marketPrice >= price;
+            });
 
-            //setTableData(biggerMarketValue)
-            setTableData(filteredData);
+            setTableData(biggerMarketValueItems)
 
         } catch (error) {
             console.error(error)
