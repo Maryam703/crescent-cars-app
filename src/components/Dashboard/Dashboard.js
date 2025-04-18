@@ -157,11 +157,15 @@ export default function Dashboard() {
         setMaxProfit(e.maxValue)
     }
 
-    let percentDiff = (item) => {
-        return Number(item?.replace("%", ""))
+    const percentageOflistingAndMarketValue = (listingPrice, marketPrice) => {
+        let listing = Number(listingPrice?.replace("$", ""))
+        let market = Number(marketPrice?.replace("$", ""))
+        let profit = market - listing
+        const percentageDifference = (profit / market) * 100;
+        return Number(percentageDifference.toFixed(2));
     }
 
-    const searchHandler = async () => {
+    const searchHandlerAboveMarket = async () => {
         setLoading(true)
         try {
             const { data: carsData, error: carsError } = await supabase
@@ -178,7 +182,7 @@ export default function Dashboard() {
             const filteredData = carsData.filter((car) => {
                 const year = parseInt(car?.year);
                 const mileage = parseInt(car?.mileage);
-                let percentDiffVal = percentDiff(car?.difference_average)
+                let percentDiffVal = percentageOflistingAndMarketValue(car?.price, car?.marketPrice)
 
                 return (
                     year >= minYear &&
@@ -193,10 +197,52 @@ export default function Dashboard() {
                 const marketPrice = Number(item?.marketPrice.replace(/[$,]/g, ""));
                 const price = Number(item?.price.replace(/[$,]/g, ""));
 
-                return marketPrice >= price;
+                return marketPrice > price;
             });
 
             setTableData(biggerMarketValueItems)
+
+        } catch (error) {
+            console.error(error)
+        }
+
+        setLoading(false)
+    }
+
+    const searchHandlerBelowMarket = async () => {
+        setLoading(true)
+        try {
+            const { data: carsData, error: carsError } = await supabase
+                .from(tableName)
+                .select('*')
+                .ilike("state", state)
+                .ilike("city", city)
+
+            if (carsError) {
+                console.log("err:", carsError)
+            }
+
+
+            const filteredData = carsData.filter((car) => {
+                const year = parseInt(car?.year);
+                const mileage = parseInt(car?.mileage);
+               
+                return (
+                    year >= minYear &&
+                    year <= maxYear &&
+                    mileage >= minMileageValue &&
+                    mileage <= maxMileageValue
+                )
+            });
+
+            const smallerMarketValueItems = filteredData?.filter((item) => {
+                const marketPrice = Number(item?.marketPrice.replace(/[$,]/g, ""));
+                const price = Number(item?.price.replace(/[$,]/g, ""));
+
+                return marketPrice <= price;
+            });
+
+            setTableData(smallerMarketValueItems)
 
         } catch (error) {
             console.error(error)
@@ -319,12 +365,14 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
-                <div className='dashboard-search-btn' onClick={searchHandler}>Search here</div>
+                <div className='dashboard-search-btn' onClick={searchHandlerAboveMarket}>Search Above Market Price</div>
+
+                <div className='dashboard-search-btn' onClick={searchHandlerBelowMarket}>Search Below Market Price</div>
 
 
                 <div className='dashboard-data-table-container'>
                     <div className="dashboard-data-table-inner-container">
-                        <Table TableHeadings={tableHeadings} TableData={tableData} percentDiff={percentDiff} />
+                        <Table TableHeadings={tableHeadings} TableData={tableData} percentageOflistingAndMarketValue={percentageOflistingAndMarketValue} />
                     </div>
                 </div>
 
