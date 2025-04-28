@@ -29,10 +29,7 @@ export default function Table({
                   <td>{item.mileage}</td>
                   <td>{item.price}</td>
                   <td>{item.marketPrice}</td>
-                  {percentageOflistingAndMarketValue(item?.price , item?.marketPrice) > 20 ?
-                  <td>{percentageOflistingAndMarketValue(item?.price , item?.marketPrice)}%✅ </td>:
-                  <td>{percentageOflistingAndMarketValue(item?.price , item?.marketPrice)}%</td>
-                  }
+                  <td>{percentageOflistingAndMarketValue(item?.price, item?.marketPrice)}%</td>
                   <td>{item.source}</td>
                   <td><Link to={item.link}>visit🔗</Link></td>
                 </tr>
